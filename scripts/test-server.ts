@@ -47,7 +47,13 @@ const server = createServer(async (req, res) => {
         headers: req.headers as HeadersInit,
         body: chunks.length ? Buffer.concat(chunks) : undefined,
       });
-      const response = await handle(request, f.s);
+      const devOrigin = request.headers.get("origin");
+      const services =
+        devOrigin &&
+        ["http://localhost:5173", "http://127.0.0.1:5173"].includes(devOrigin)
+          ? { ...f.s, env: { ...f.s.env, DEPLOY_PRIME_URL: devOrigin } }
+          : f.s;
+      const response = await handle(request, services);
       res.statusCode = response.status;
       response.headers.forEach((v, k) => res.setHeader(k, v));
       res.end(Buffer.from(await response.arrayBuffer()));

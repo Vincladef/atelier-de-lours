@@ -20,6 +20,8 @@ npm run test:e2e
 
 Playwright utilise Chromium système s’il est présent, sinon le navigateur installé par `npx playwright install chromium`. Un chemin spécifique peut être fourni dans `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH`.
 
+Le paquet de l’API conserve la variante Linux glibc de Sharp attendue par Netlify. Les variantes Linux musl sont exclues du paquet avec un glob négatif `included_files`. Le travailleur d’emails n’embarque pas Sharp ; seule l’API traite les images.
+
 `npm run test:server` sert la compilation sur le port 8890 avec PostgreSQL PGlite isolé, un stockage en mémoire, une boîte de test et une IA simulée. Ce serveur est réservé aux tests, écoute uniquement sur la boucle locale et ne fait partie d’aucun déploiement. Les tests navigateur y effectuent une vraie navigation, une connexion par lien et des écritures SQL. Ils ne prouvent pas la disponibilité des fournisseurs réels.
 
 Pour travailler avec les services réels, utiliser `npx netlify dev --site atelier-de-lours`, après authentification Netlify, avec les variables du projet accessibles aux fonctions. Le serveur Vite seul (`npm run dev`) utilise le port 8890 comme proxy API. Dans un environnement avec proxy HTTPS, transmettre à la CLI Netlify ses options `--http-proxy` et `--http-proxy-certificate-filename`, sans désactiver TLS.

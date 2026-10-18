@@ -12,7 +12,9 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
-      - run: npm run build
+      - run: npx netlify build --offline --context production
+        env:
+          NETLIFY_CLI_TELEMETRY_DISABLED: "1"
       - run: npm test
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e

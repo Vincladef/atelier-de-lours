@@ -8,8 +8,11 @@
 [functions]
   directory = "netlify/functions"
   node_bundler = "esbuild"
+  external_node_modules = ["pg"]
+  included_files = ["migrations/*.sql", "src/data/curriculum.json", "!node_modules/@img/*linuxmusl*/**"]
+
+[functions.api]
   external_node_modules = ["sharp", "pg"]
-  included_files = ["migrations/*.sql", "src/data/curriculum.json"]
 
 [functions.mail-worker]
   schedule = "*/15 * * * *"

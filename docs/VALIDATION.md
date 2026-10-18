@@ -11,6 +11,15 @@
 - Les 16 vidéos pédagogiques et les deux bonus répondent à oEmbed avec les titres et auteurs attendus et une intégration autorisée. Ce contrôle ne remplace pas un visionnage intégral des démonstrations. Les exercices restent accessibles sans lecteur vidéo.
 - Les 15 photographies de référence ont été téléchargées, optimisées en WebP et conservées avec leurs sources et crédits.
 
+## Contrôle final de production
+
+- Site vérifié directement en HTTPS dans Chromium sur ordinateur, tablette et téléphone : réponse 200, images chargées, aucun débordement horizontal, aucune erreur JavaScript ou de console de l’application. Le 401 de `/api/state` avant connexion est attendu.
+- Le certificat public du proxy de l’environnement est approuvé uniquement dans un profil Chromium isolé et pour le domaine de l’application ; la vérification TLS reste active.
+- L’ancien import Google Fonts a été supprimé : les polices sont servies localement. La barre et le badge Netlify ont été désactivés via les paramètres du projet, sans changement de formule.
+- Réinstallation propre avec `npm ci`, compilation et connexion/écriture/relecture à travers le proxy Vite vérifiées.
+- Le paquet API conserve la bibliothèque native Linux glibc vérifiée ; la variante musl inutile est exclue par `included_files`. Archive API : environ 10,1 Mo ; travailleur d’emails : environ 0,62 Mo. Les migrations sont présentes dans les deux archives.
+- Déploiement final : `6ad51bb9eb66dd3fb0bcf200`, sur le projet Netlify existant. Deux fonctions présentes : `api` et `mail-worker`, ce dernier programmé toutes les 15 minutes.
+
 ## Fournisseurs réels — production
 
 Contrôles effectués avec les variables existantes du projet Netlify `8f6c804f-819f-4730-a2f7-a4b06125438a`, dans le contexte de production. Les aperçus de ce projet ne reçoivent pas les cinq secrets applicatifs ; ce n’est pas un échec de l’application.
