@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { lessons, weeks } from "../lib/curriculum";
+import { lessonPageContext } from "../lib/pageContext";
 import { useStore } from "../lib/store";
 import { ErrorMessage, go, Photo } from "./Common";
 import { LessonChat } from "./LessonChat";
@@ -12,6 +13,11 @@ export function LessonPage({ id }: { id: number }) {
     p = s.data!.progress[id];
   const phase = p?.phase || "observe",
     step = p?.step || 0;
+  const pageContext = lessonPageContext(
+    l,
+    { phase, step },
+    Boolean(p?.completed_at),
+  );
   const chatTrigger = useRef<HTMLButtonElement>(null);
   const closeChat = () => {
     setChatOpen(false);
@@ -101,9 +107,9 @@ export function LessonPage({ id }: { id: number }) {
                 <span className="p-eyebrow">
                   01 · Prendre le temps d’observer
                 </span>
-                <h2>Regarde, puis essaie.</h2>
-                <p>{l.welcome}</p>
-                <p>{l.watch}</p>
+                <h2>{pageContext.title}</h2>
+                <p>{pageContext.explanations[0]}</p>
+                <p>{pageContext.instruction}</p>
                 <div className="video-frame">
                   {video ? (
                     <iframe
@@ -159,8 +165,8 @@ export function LessonPage({ id }: { id: number }) {
                 </div>
                 <div className="task-area">
                   <span className="task-number">GESTE {step + 1} SUR 4</span>
-                  <h2>{l.steps[step][0]}</h2>
-                  <p>{l.steps[step][1]}</p>
+                  <h2>{pageContext.title}</h2>
+                  <p>{pageContext.instruction}</p>
                   <label className="check-step">
                     <input
                       type="checkbox"
@@ -219,12 +225,8 @@ export function LessonPage({ id }: { id: number }) {
             ) : (
               <>
                 <span className="p-eyebrow">03 · Garder une trace</span>
-                <h2>
-                  {p?.completed_at
-                    ? "Cette séance est dans le carnet."
-                    : "Et voilà pour aujourd’hui."}
-                </h2>
-                <p>{l.end}</p>
+                <h2>{pageContext.title}</h2>
+                <p>{pageContext.instruction}</p>
                 <button
                   className="button ghost"
                   onClick={() => setUpload(true)}

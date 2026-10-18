@@ -614,3 +614,108 @@ test("conversation history retrieves older exchanges by lesson without gaps or c
   assert.equal((await f.request("/chat?lesson_id=1&before=-1")).status, 400);
   assert.equal((await f.request("/chat?lesson_id=17")).status, 400);
 });
+
+test("the current page replaces the previous gesture in the DeepSeek system context", async () => {
+  for (const [step, title, instruction] of [
+    [
+      0,
+      "Échauffe ta main",
+      "Trace cinq lignes, cinq courbes et cinq petits cercles.",
+    ],
+    [
+      2,
+      "Ajoute une goutte d’eau",
+      "Dilue trois bandes de couleur avec des quantités d’eau différentes.",
+    ],
+  ] as const) {
+    const response = await f.request("/chat", "POST", {
+      lesson_id: 1,
+      page: "lesson",
+      stage: { phase: "draw", step },
+      question: "Que dois-je faire ici ?",
+    });
+    assert.equal(response.status, 200);
+    const system = f.requests
+      .filter((r) => r.url.endsWith("/chat/completions"))
+      .at(-1)!.body.messages[0].content;
+    assert.ok(system.includes(`Titre de la page ouverte : ${title}`));
+    assert.ok(system.includes(instruction));
+    assert.ok(
+      system.includes('"lesson_title":"Faire connaissance avec les feutres"'),
+    );
+    assert.ok(system.includes('"phase":"Dessiner"'));
+    assert.ok(system.includes("Un pinceau légèrement humide suffit"));
+    assert.ok(system.includes("Si le papier gondole"));
+    if (step === 2)
+      assert.ok(
+        !system.includes(
+          "Trace cinq lignes, cinq courbes et cinq petits cercles.",
+        ),
+      );
+  }
+});
+
+test("watch and finish pages provide their own explanations instead of another exercise", async () => {
+  const observed = await f.request("/chat", "POST", {
+    lesson_id: 1,
+    page: "lesson",
+    stage: { phase: "observe", step: 2 },
+    question: "Que regarder ?",
+  });
+  assert.equal(observed.status, 200);
+  let system = f.requests
+    .filter((r) => r.url.endsWith("/chat/completions"))
+    .at(-1)!.body.messages[0].content;
+  assert.ok(
+    system.includes("Titre de la page ouverte : Regarde, puis essaie."),
+  );
+  assert.ok(system.includes("Dans la vidéo, observe trois gestes"));
+  assert.ok(system.includes("Bienvenue dans ton atelier"));
+  assert.ok(!system.includes("Dilue trois bandes de couleur"));
+  await f.request("/lessons/1", "PATCH", { completed: true });
+  const finished = await f.request("/chat", "POST", {
+    lesson_id: 1,
+    page: "lesson",
+    stage: { phase: "finish", step: 2 },
+    question: "Que garder ?",
+  });
+  assert.equal(finished.status, 200);
+  system = f.requests.filter((r) => r.url.endsWith("/chat/completions")).at(-1)!
+    .body.messages[0].content;
+  assert.ok(
+    system.includes(
+      "Titre de la page ouverte : Cette séance est dans le carnet.",
+    ),
+  );
+  assert.ok(system.includes("Garde ton nuancier"));
+});
+
+test("the standalone teacher page is distinguished from a lesson currently on screen", async () => {
+  const r = await f.request("/chat", "POST", {
+    lesson_id: 1,
+    page: "owl",
+    question: "Comment commencer ?",
+  });
+  assert.equal(r.status, 200);
+  const system = f.requests
+    .filter((r) => r.url.endsWith("/chat/completions"))
+    .at(-1)!.body.messages[0].content;
+  assert.ok(
+    system.includes(
+      "Titre de la page ouverte : Tu as une question, mon Ours ?",
+    ),
+  );
+  assert.ok(system.includes("séance de référence, non affichée"));
+  const count = f.requests.length;
+  assert.equal(
+    (
+      await f.request("/chat", "POST", {
+        lesson_id: 1,
+        page: "unknown",
+        question: "Aide",
+      })
+    ).status,
+    400,
+  );
+  assert.equal(f.requests.length, count);
+});

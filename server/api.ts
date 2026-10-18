@@ -17,6 +17,7 @@ import {
 import { image } from "./images";
 import { askOwl } from "./ai";
 import { giftActive, mailContent } from "./mail";
+import type { ChatPage } from "../src/lib/pageContext";
 import type { LessonStage } from "../src/lib/curriculum";
 import type { Services, User } from "./types";
 
@@ -433,7 +434,12 @@ export async function handle(req: Request, s: Services): Promise<Response> {
           throw new HttpError(400, "L’étape du cours est invalide.");
         stage = { phase: b.stage.phase, step: integer(b.stage.step, 0, 3) };
       }
-      return json(await askOwl(s, u, id, question, b.image, b.consent, stage));
+      if (b.page !== undefined && !["lesson", "owl"].includes(b.page))
+        throw new HttpError(400, "La page indiquée est invalide.");
+      const page: ChatPage = b.page || (stage ? "lesson" : "owl");
+      return json(
+        await askOwl(s, u, id, question, b.image, b.consent, stage, page),
+      );
     }
     if (path === "/admin/status" && method === "GET") {
       owner(u);

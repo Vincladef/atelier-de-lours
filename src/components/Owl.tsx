@@ -197,6 +197,7 @@ export function Conversation({
                 image: attachment || undefined,
                 consent,
                 stage,
+                page: stage ? "lesson" : "owl",
               });
               setQuestion("");
               setAttachment("");

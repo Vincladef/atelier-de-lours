@@ -419,13 +419,11 @@ test("contextual lesson chat preserves the gesture, saves text and photo history
   })
     .png()
     .toBuffer();
-  await panel
-    .getByLabel("Joindre une photo à ma question")
-    .setInputFiles({
-      name: "nuancier.png",
-      mimeType: "image/png",
-      buffer: photo,
-    });
+  await panel.getByLabel("Joindre une photo à ma question").setInputFiles({
+    name: "nuancier.png",
+    mimeType: "image/png",
+    buffer: photo,
+  });
   await panel
     .getByLabel("Ma question à Maman Chouette")
     .fill("Voici mon nuancier, quel geste améliorer ?");
@@ -464,4 +462,80 @@ test("animal photographs recover from broken sources", async ({ page }) => {
     .poll(() => image.evaluate((i: HTMLImageElement) => i.naturalWidth))
     .toBeGreaterThan(0);
   await expect(page.getByText("Photographie indisponible")).toHaveCount(0);
+});
+
+test("the next message follows the page and gesture currently displayed", async ({
+  page,
+}, info) => {
+  const errors: string[] = [];
+  page.on("pageerror", (e) => errors.push(e.message));
+  page.on("console", (m) => {
+    if (m.type() === "error") errors.push(m.text());
+  });
+  await page.getByRole("button", { name: "Reprendre mon cours" }).click();
+  await page.getByRole("button", { name: "Passer à la pratique" }).click();
+  const trigger = page.getByRole("button", {
+    name:
+      info.project.name === "desktop"
+        ? "Lui demander de l’aide"
+        : "Demander à Maman Chouette",
+    exact: true,
+  });
+  const panel =
+    info.project.name === "desktop"
+      ? page.locator(".lesson-chat-panel")
+      : page.getByRole("dialog", { name: "Maman Chouette" });
+  async function ask(expected: { phase: string; step: number }) {
+    await panel
+      .getByLabel("Ma question à Maman Chouette")
+      .fill("Que dois-je faire ici ?");
+    const sent = page.waitForRequest(
+      (r) => r.url().endsWith("/api/chat") && r.method() === "POST",
+    );
+    const answered = page.waitForResponse(
+      (r) => r.url().endsWith("/api/chat") && r.request().method() === "POST",
+    );
+    await panel.getByRole("button", { name: "Envoyer" }).click();
+    const body = (await sent).postDataJSON();
+    expect(body.stage).toEqual(expected);
+    expect(body.page).toBe("lesson");
+    expect((await answered).status()).toBe(200);
+    await expect(
+      panel.getByLabel("Ma question à Maman Chouette"),
+    ).toBeEnabled();
+  }
+  await expect(
+    page.getByRole("heading", { name: "Échauffe ta main" }),
+  ).toBeVisible();
+  await trigger.click();
+  await ask({ phase: "draw", step: 0 });
+  if (info.project.name !== "desktop")
+    await panel.getByRole("button", { name: "Fermer la conversation" }).click();
+  await page.getByRole("button", { name: "Étape suivante" }).click();
+  await page.getByRole("button", { name: "Étape suivante" }).click();
+  await expect(
+    page.getByRole("heading", { name: "Ajoute une goutte d’eau" }),
+  ).toBeVisible();
+  if (info.project.name !== "desktop") await trigger.click();
+  await ask({ phase: "draw", step: 2 });
+  if (info.project.name !== "desktop")
+    await panel.getByRole("button", { name: "Fermer la conversation" }).click();
+  await page.getByRole("button", { name: "Regarder", exact: true }).click();
+  await expect(
+    page.getByRole("heading", { name: "Regarde, puis essaie." }),
+  ).toBeVisible();
+  if (info.project.name !== "desktop") await trigger.click();
+  await ask({ phase: "observe", step: 2 });
+  await panel.getByRole("button", { name: "Fermer la conversation" }).click();
+  await page.goto("/#chouette/1");
+  await page
+    .getByLabel("Ma question à Maman Chouette")
+    .fill("Je suis dans ton bureau.");
+  const sent = page.waitForRequest(
+    (r) => r.url().endsWith("/api/chat") && r.method() === "POST",
+  );
+  await page.getByRole("button", { name: "Envoyer" }).click();
+  expect((await sent).postDataJSON().page).toBe("owl");
+  await expect(page.getByRole("log")).toContainText("Je suis dans ton bureau.");
+  expect(errors).toEqual([]);
 });
