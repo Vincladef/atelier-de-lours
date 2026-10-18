@@ -35,6 +35,8 @@ export interface Review {
   repeat: string;
 }
 export interface Chat {
+  phase?: "observe" | "draw" | "finish" | null;
+  step?: number | null;
   id: number;
   lesson_id: number;
   role: "user" | "assistant";

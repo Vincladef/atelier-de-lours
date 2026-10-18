@@ -10,9 +10,26 @@ export function Photo({
   className?: string;
   eager?: boolean;
 }) {
-  const p = photos[name];
-  const [localFailed, setLocalFailed] = useState(false),
-    [failed, setFailed] = useState(false);
+  return (
+    <PhotoImage key={name} name={name} className={className} eager={eager} />
+  );
+}
+function PhotoImage({
+  name,
+  className,
+  eager,
+}: {
+  name: PhotoName;
+  className: string;
+  eager: boolean;
+}) {
+  const original = photos[name];
+  const backup =
+    photos[name.startsWith("ours") ? "oursForet" : "chouetteBranche"];
+  const [source, setSource] = useState(0);
+  const [failed, setFailed] = useState(false);
+  const candidates = [original.local, original.url, backup.local];
+  const p = source === 2 ? backup : original;
   return (
     <div className={"photo-wrap " + className}>
       {failed ? (
@@ -20,15 +37,20 @@ export function Photo({
       ) : (
         <img
           className="photo-img"
-          src={localFailed ? p.url : p.local}
+          src={candidates[source]}
           alt={p.alt}
           loading={eager ? "eager" : "lazy"}
-          onError={() => (localFailed ? setFailed(true) : setLocalFailed(true))}
+          onError={() =>
+            source < candidates.length - 1
+              ? setSource(source + 1)
+              : setFailed(true)
+          }
         />
       )}
     </div>
   );
 }
+
 export function Modal({
   title,
   children,

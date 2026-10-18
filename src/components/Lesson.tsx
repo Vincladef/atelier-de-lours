@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { lessons, weeks } from "../lib/curriculum";
 import { useStore } from "../lib/store";
 import { ErrorMessage, go, Photo } from "./Common";
+import { LessonChat } from "./LessonChat";
 import { Upload } from "./Notebook";
 import { weekPhotos } from "./Pages";
 export function LessonPage({ id }: { id: number }) {
@@ -11,8 +12,16 @@ export function LessonPage({ id }: { id: number }) {
     p = s.data!.progress[id];
   const phase = p?.phase || "observe",
     step = p?.step || 0;
+  const chatTrigger = useRef<HTMLButtonElement>(null);
+  const closeChat = () => {
+    setChatOpen(false);
+    requestAnimationFrame(() =>
+      chatTrigger.current?.focus({ preventScroll: true }),
+    );
+  };
   const [video, setVideo] = useState(false),
-    [upload, setUpload] = useState(false);
+    [upload, setUpload] = useState(false),
+    [chatOpen, setChatOpen] = useState(false);
   const [compact, setCompact] = useState(
     () => matchMedia("(max-width:880px)").matches,
   );
@@ -73,6 +82,18 @@ export function LessonPage({ id }: { id: number }) {
               </button>
             ))}
           </div>
+          {compact && (
+            <button
+              ref={chatTrigger}
+              className="lesson-chat-trigger"
+              aria-expanded={chatOpen}
+              aria-haspopup="dialog"
+              onClick={() => setChatOpen(true)}
+            >
+              <Photo name="chouettePortrait" className="owl-portrait" />
+              Demander à Maman Chouette
+            </button>
+          )}
           <div className="content-sheet">
             {phase === "observe" ? (
               <>
@@ -156,24 +177,27 @@ export function LessonPage({ id }: { id: number }) {
                     Ce geste est fait
                   </label>
                 </div>
-                <details className="dropdown">
-                  <summary>Un indice de Maman Chouette</summary>
-                  <p>{l.tip}</p>
-                  <p>{l.help}</p>
-                  <button
-                    className="textbutton"
-                    onClick={() => go("chouette/" + id)}
-                  >
-                    J’ai encore une question
-                  </button>
-                </details>
-                <details className="dropdown">
-                  <summary>Un petit chronomètre ?</summary>
-                  <Timer />
-                </details>
-                <details className="dropdown">
-                  <summary>Pour aller un peu plus loin</summary>
-                  <p>{l.challenge}</p>
+                <details className="dropdown lesson-optional">
+                  <summary>Outils facultatifs</summary>
+                  <details className="dropdown">
+                    <summary>Un indice de Maman Chouette</summary>
+                    <p>{l.tip}</p>
+                    <p>{l.help}</p>
+                    <button
+                      className="textbutton"
+                      onClick={() => setChatOpen(true)}
+                    >
+                      J’ai encore une question
+                    </button>
+                  </details>
+                  <details className="dropdown">
+                    <summary>Un petit chronomètre ?</summary>
+                    <Timer />
+                  </details>
+                  <details className="dropdown">
+                    <summary>Pour aller un peu plus loin</summary>
+                    <p>{l.challenge}</p>
+                  </details>
                 </details>
                 <div className="lesson-foot">
                   <button
@@ -286,32 +310,61 @@ export function LessonPage({ id }: { id: number }) {
               <p>{w.materials.join(" · ")}</p>
               {compact && <Note id={id} />}
             </details>
-            <button className="textbutton" onClick={() => go("chouette/" + id)}>
-              Demander à Maman Chouette
-            </button>
           </div>
         </div>
         <aside className="side-quiet">
-          <span className="p-eyebrow">Le coin de la chouette</span>
-          <Photo name="chouettePortrait" className="mini-photo" />
-          <h3>Une question ?</h3>
-          <button className="textbutton" onClick={() => go("chouette/" + id)}>
-            Lui demander de l’aide
-          </button>
-          <details className="dropdown">
-            <summary>Le matériel de la semaine</summary>
-            <ul>
-              {w.materials.map((v) => (
-                <li key={v}>{v}</li>
-              ))}
-            </ul>
-          </details>
-          <details className="dropdown">
-            <summary>Mes notes</summary>
-            {!compact && <Note id={id} />}
+          {!compact && !chatOpen && (
+            <div className="owl-invitation">
+              <Photo name="chouettePortrait" className="owl-portrait" />
+              <div>
+                <h3>Maman Chouette</h3>
+                <button
+                  ref={chatTrigger}
+                  className="textbutton"
+                  aria-expanded={chatOpen}
+                  aria-controls="lesson-conversation"
+                  onClick={() => setChatOpen(true)}
+                >
+                  Lui demander de l’aide
+                </button>
+              </div>
+            </div>
+          )}
+          {!compact && (
+            <LessonChat
+              id={id}
+              stage={{ phase, step }}
+              compact={false}
+              open={chatOpen}
+              close={closeChat}
+            />
+          )}
+          <details className="dropdown lesson-side-tools">
+            <summary>Outils facultatifs</summary>
+            <details className="dropdown">
+              <summary>Le matériel de la semaine</summary>
+              <ul>
+                {w.materials.map((v) => (
+                  <li key={v}>{v}</li>
+                ))}
+              </ul>
+            </details>
+            <details className="dropdown">
+              <summary>Mes notes</summary>
+              {!compact && <Note id={id} />}
+            </details>
           </details>
         </aside>
       </div>
+      {compact && (
+        <LessonChat
+          id={id}
+          stage={{ phase, step }}
+          compact
+          open={chatOpen}
+          close={closeChat}
+        />
+      )}
       {upload && <Upload lessonId={id} close={() => setUpload(false)} />}
     </>
   );

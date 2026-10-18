@@ -25,6 +25,11 @@ const server = createServer(async (req, res) => {
       res.end("{}");
       return;
     }
+    if (url.pathname === "/__test/vision" && req.method === "POST") {
+      f.enableVision();
+      res.end("{}");
+      return;
+    }
     if (url.pathname === "/__test/inbox") {
       res.setHeader("Content-Type", "application/json");
       res.end(JSON.stringify(f.mails));

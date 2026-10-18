@@ -24,7 +24,8 @@ async function nav(page: Page, name: string, project: string) {
     exact: true,
   });
   const button = root.getByRole("button", { name, exact: true });
-  if (project === "desktop") await button.click(); else await button.tap();
+  if (project === "desktop") await button.click();
+  else await button.tap();
 }
 async function noOverflow(page: Page) {
   expect(
@@ -36,7 +37,9 @@ async function noOverflow(page: Page) {
 test.beforeEach(async ({ page }) => {
   await page.request.post("/__test/reset");
   await page.goto("/");
-  await expect(page.getByRole("button", { name: "Reprendre mon cours" })).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Reprendre mon cours" }),
+  ).toBeVisible();
   await expect(page.getByLabel("Ton adresse email")).toHaveCount(0);
 });
 
@@ -110,6 +113,7 @@ test("lesson phases, steps, notes, quiz and real resume", async ({
     page.getByRole("heading", { name: "Crée ton nuancier" }),
   ).toBeVisible();
   if (info.project.name === "desktop") {
+    await page.locator(".lesson-side-tools > summary").click();
     await page
       .locator(".side-quiet")
       .locator("summary")
@@ -218,15 +222,27 @@ test("animal studio draws, erases and saves a real sketch", async ({
     page.getByRole("button", { name: "Garder mon croquis" }),
   ).toBeDisabled();
   await page.getByRole("button", { name: "Étude n° 02" }).click();
-  await page.getByLabel("Zone de dessin au doigt ou à la souris").scrollIntoViewIfNeeded();
+  await page
+    .getByLabel("Zone de dessin au doigt ou à la souris")
+    .scrollIntoViewIfNeeded();
   const box = await page
     .getByLabel("Zone de dessin au doigt ou à la souris")
     .boundingBox();
   if (info.project.name === "mobile") {
     const cdp = await page.context().newCDPSession(page);
-    await cdp.send("Input.dispatchTouchEvent", {type:"touchStart", touchPoints:[{x:box!.x+30,y:box!.y+40}]});
-    for(let i=1;i<=8;i++) await cdp.send("Input.dispatchTouchEvent", {type:"touchMove", touchPoints:[{x:box!.x+30+i*10,y:box!.y+40+i*7}]});
-    await cdp.send("Input.dispatchTouchEvent", {type:"touchEnd", touchPoints:[]});
+    await cdp.send("Input.dispatchTouchEvent", {
+      type: "touchStart",
+      touchPoints: [{ x: box!.x + 30, y: box!.y + 40 }],
+    });
+    for (let i = 1; i <= 8; i++)
+      await cdp.send("Input.dispatchTouchEvent", {
+        type: "touchMove",
+        touchPoints: [{ x: box!.x + 30 + i * 10, y: box!.y + 40 + i * 7 }],
+      });
+    await cdp.send("Input.dispatchTouchEvent", {
+      type: "touchEnd",
+      touchPoints: [],
+    });
     await cdp.detach();
   } else {
     await page.mouse.move(box!.x + 30, box!.y + 40);
@@ -322,7 +338,130 @@ test("settings are keyboard accessible and gift stays disabled", async ({
     }),
   ).toHaveAttribute("aria-pressed", "true");
   await page.getByRole("button", { name: "Quitter l’administration" }).click();
-  await expect(page.getByRole("button", { name: "Reprendre mon cours" })).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Reprendre mon cours" }),
+  ).toBeVisible();
   await expect(page.getByLabel("Ton adresse email")).toHaveCount(0);
   await noOverflow(page);
+});
+
+test("contextual lesson chat preserves the gesture, saves text and photo history, and closes immediately", async ({
+  page,
+}, info) => {
+  const errors: string[] = [];
+  page.on("pageerror", (e) => errors.push(e.message));
+  page.on("console", (m) => {
+    if (m.type() === "error") errors.push(m.text());
+  });
+  await page.request.post("/__test/vision");
+  await page.getByRole("button", { name: "Reprendre mon cours" }).click();
+  await page.getByRole("button", { name: "Passer à la pratique" }).click();
+  await page.getByLabel("Ce geste est fait").check();
+  await page.getByRole("button", { name: "Étape suivante" }).click();
+  await expect(
+    page.getByRole("heading", { name: "Crée ton nuancier" }),
+  ).toBeVisible();
+  const original = page.url();
+  const trigger =
+    info.project.name === "desktop"
+      ? page.getByRole("button", { name: "Lui demander de l’aide" })
+      : page.getByRole("button", { name: "Demander à Maman Chouette" });
+  await trigger.click();
+  const panel =
+    info.project.name === "desktop"
+      ? page.locator(".lesson-chat-panel")
+      : page.getByRole("dialog", { name: "Maman Chouette" });
+  await expect(panel).toBeVisible();
+  await expect(panel).toContainText("Dessiner · Geste 2");
+  if (info.project.name === "desktop")
+    await expect(
+      page.getByRole("heading", { name: "Crée ton nuancier" }),
+    ).toBeInViewport();
+  await panel
+    .getByLabel("Ma question à Maman Chouette")
+    .fill("Comment doser l’eau dans ce nuancier ?");
+  await expect(
+    panel.getByLabel("Ma question à Maman Chouette"),
+  ).toBeInViewport();
+  const sent = page.waitForRequest(
+    (r) => r.url().endsWith("/api/chat") && r.method() === "POST",
+  );
+  await panel.getByRole("button", { name: "Envoyer" }).click();
+  expect((await sent).postDataJSON().stage).toEqual({ phase: "draw", step: 1 });
+  await expect(panel.getByRole("log")).toContainText(
+    "Pose trois formes légères",
+  );
+  expect(page.url()).toBe(original);
+  if (info.project.name === "mobile") {
+    await page.setViewportSize({ width: 390, height: 460 });
+    await expect(
+      panel.getByLabel("Ma question à Maman Chouette"),
+    ).toBeInViewport();
+    await expect(
+      panel.getByRole("button", { name: "Envoyer" }),
+    ).toBeInViewport();
+    await page.setViewportSize({ width: 390, height: 844 });
+  }
+  await panel
+    .getByLabel("Ma question à Maman Chouette")
+    .fill("Mon brouillon reste ici");
+  await panel.getByRole("button", { name: "Fermer la conversation" }).click();
+  await expect(panel).not.toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Crée ton nuancier" }),
+  ).toBeVisible();
+  await trigger.click();
+  await expect(panel.getByLabel("Ma question à Maman Chouette")).toHaveValue(
+    "Mon brouillon reste ici",
+  );
+  const photo = await sharp({
+    create: { width: 100, height: 100, channels: 3, background: "#dfcaaa" },
+  })
+    .png()
+    .toBuffer();
+  await panel
+    .getByLabel("Joindre une photo à ma question")
+    .setInputFiles({
+      name: "nuancier.png",
+      mimeType: "image/png",
+      buffer: photo,
+    });
+  await panel
+    .getByLabel("Ma question à Maman Chouette")
+    .fill("Voici mon nuancier, quel geste améliorer ?");
+  await expect(panel.getByRole("button", { name: "Envoyer" })).toBeDisabled();
+  await panel.getByLabel("J’autorise l’envoi de cette photo").check();
+  await panel.getByRole("button", { name: "Envoyer" }).click();
+  await expect(panel.getByRole("log")).toContainText("Une photo a été jointe");
+  await noOverflow(page);
+  await page.screenshot({
+    path: `test-results/${info.project.name}-lesson-chat.png`,
+    fullPage: true,
+  });
+  await page.keyboard.press("Escape");
+  await expect(panel).not.toBeVisible();
+  const state = await (await page.request.get("/api/state")).json();
+  expect(state.progress[1].step).toBe(1);
+  expect(state.progress[1].checked_steps).toContain(0);
+  await page.reload();
+  await expect(
+    page.getByRole("heading", { name: "Crée ton nuancier" }),
+  ).toBeVisible();
+  await page.goto("/#chouette/1");
+  await expect(page.getByRole("log")).toContainText("Comment doser l’eau");
+  await expect(page.getByRole("log")).toContainText("Voici mon nuancier");
+  await expect(page.getByRole("log")).toContainText("Dessiner · Geste 2");
+  expect(errors).toEqual([]);
+});
+
+test("animal photographs recover from broken sources", async ({ page }) => {
+  await page.route("**/photos/oursRiviere.webp", (r) => r.abort());
+  await page.route("https://images.unsplash.com/**", (r) => r.abort());
+  await page.goto("/#studio");
+  const image = page.locator(".animal-select").first().locator("img");
+  await expect(image).toHaveAttribute("src", "/photos/oursForet.webp");
+  await expect
+    .poll(() => image.evaluate((i: HTMLImageElement) => i.naturalWidth))
+    .toBeGreaterThan(0);
+  await expect(page.getByText("Photographie indisponible")).toHaveCount(0);
 });

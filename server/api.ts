@@ -17,6 +17,7 @@ import {
 import { image } from "./images";
 import { askOwl } from "./ai";
 import { giftActive, mailContent } from "./mail";
+import type { LessonStage } from "../src/lib/curriculum";
 import type { Services, User } from "./types";
 
 const genericLogin = {
@@ -28,9 +29,9 @@ const artworkColumns =
 function configured(s: Services) {
   return Boolean(
     s.env.EMAIL_FROM &&
-      s.env.PAPA_EMAIL &&
-      s.env.GMAIL_APP_PASSWORD &&
-      normalizeEmail(s.env.EMAIL_FROM) !== normalizeEmail(s.env.PAPA_EMAIL),
+    s.env.PAPA_EMAIL &&
+    s.env.GMAIL_APP_PASSWORD &&
+    normalizeEmail(s.env.EMAIL_FROM) !== normalizeEmail(s.env.PAPA_EMAIL),
   );
 }
 function owner(u: User) {
@@ -156,7 +157,11 @@ export async function handle(req: Request, s: Services): Promise<Response> {
     try {
       u = await authenticate(req, s.db);
     } catch (e) {
-      if (!(e instanceof HttpError) || e.status !== 401 || path.startsWith("/admin/"))
+      if (
+        !(e instanceof HttpError) ||
+        e.status !== 401 ||
+        path.startsWith("/admin/")
+      )
         throw e;
       const email = normalizeEmail(s.env.PAPA_EMAIL);
       if (!email || email === normalizeEmail(s.env.EMAIL_FROM))
@@ -192,7 +197,7 @@ export async function handle(req: Request, s: Services): Promise<Response> {
           [u.id],
         ),
         s.db.query(
-          "SELECT id,lesson_id,role,content,has_image FROM (SELECT * FROM atelier_chat WHERE user_id=$1 ORDER BY id DESC LIMIT 40) recent ORDER BY id",
+          "SELECT id,lesson_id,role,content,has_image,phase,step FROM (SELECT * FROM atelier_chat WHERE user_id=$1 ORDER BY id DESC LIMIT 40) recent ORDER BY id",
           [u.id],
         ),
       ]);
@@ -398,13 +403,37 @@ export async function handle(req: Request, s: Services): Promise<Response> {
         return json({ artwork: result.rows[0] });
       }
     }
+    if (path === "/chat" && method === "GET") {
+      const id = integer(Number(url.searchParams.get("lesson_id")), 1, 16);
+      const before = url.searchParams.has("before")
+        ? integer(
+            Number(url.searchParams.get("before")),
+            1,
+            Number.MAX_SAFE_INTEGER,
+          )
+        : null;
+      const result = await s.db.query(
+        "SELECT id,lesson_id,role,content,has_image,phase,step FROM atelier_chat WHERE user_id=$1 AND lesson_id=$2 AND ($3::bigint IS NULL OR id<$3) ORDER BY id DESC LIMIT 41",
+        [u.id, id, before],
+      );
+      return json({
+        messages: result.rows.slice(0, 40).reverse(),
+        has_more: result.rows.length > 40,
+      });
+    }
     if (path === "/chat" && method === "POST") {
       const b = await body(req, 2950000);
       const id = integer(b.lesson_id, 1, 16);
       const question = text(b.question, 1500);
       if (!question)
         throw new HttpError(400, "Écris une question pour Maman Chouette.");
-      return json(await askOwl(s, u, id, question, b.image, b.consent));
+      let stage: LessonStage | undefined;
+      if (b.stage !== undefined) {
+        if (!b.stage || !["observe", "draw", "finish"].includes(b.stage.phase))
+          throw new HttpError(400, "L’étape du cours est invalide.");
+        stage = { phase: b.stage.phase, step: integer(b.stage.step, 0, 3) };
+      }
+      return json(await askOwl(s, u, id, question, b.image, b.consent, stage));
     }
     if (path === "/admin/status" && method === "GET") {
       owner(u);

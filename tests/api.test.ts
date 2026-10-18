@@ -51,14 +51,42 @@ test("shared workshop opens at zero without login, while admin requires a sessio
   assert.deepEqual(state.progress, {});
   assert.deepEqual(state.artworks, []);
   assert.equal(f.mails.length, 0);
-  for (const [path, method, data] of [["/admin/status", "GET", undefined], ["/admin/activation", "POST", {confirmation: "ACTIVER LES ENVOIS À PAPA"}], ["/admin/test-email", "POST", {week: 1}] ] as const)
+  for (const [path, method, data] of [
+    ["/admin/status", "GET", undefined],
+    [
+      "/admin/activation",
+      "POST",
+      { confirmation: "ACTIVER LES ENVOIS À PAPA" },
+    ],
+    ["/admin/test-email", "POST", { week: 1 }],
+  ] as const)
     assert.equal((await f.request(path, method, data)).status, 401);
-  assert.equal((await f.request("/lessons/1", "PATCH", { notes: "Sans connexion" })).status, 200);
-  assert.equal((await (await f.request("/state", "GET", undefined, {cookie: "atelier_session=" + "x".repeat(43)})).json()).progress[1].notes, "Sans connexion");
+  assert.equal(
+    (await f.request("/lessons/1", "PATCH", { notes: "Sans connexion" }))
+      .status,
+    200,
+  );
+  assert.equal(
+    (
+      await (
+        await f.request("/state", "GET", undefined, {
+          cookie: "atelier_session=" + "x".repeat(43),
+        })
+      ).json()
+    ).progress[1].notes,
+    "Sans connexion",
+  );
   const uploaded = await upload();
   const artwork = (await uploaded.json()).artwork;
   assert.equal((await f.request(`/artworks/${artwork.id}/image`)).status, 200);
-  assert.equal((await f.s.db.query("SELECT enabled FROM atelier_settings WHERE key='gift_activated'")).rows[0].enabled, false);
+  assert.equal(
+    (
+      await f.s.db.query(
+        "SELECT enabled FROM atelier_settings WHERE key='gift_activated'",
+      )
+    ).rows[0].enabled,
+    false,
+  );
   assert.equal(f.mails.length, 0);
 });
 test("gift gate prevents all learner email including login", async () => {
@@ -500,4 +528,89 @@ test("private photo cleanup still runs while birthday emails are disabled", asyn
     0,
   );
   assert.equal(f.blobs.size, 0);
+});
+
+test("inline AI uses the displayed gesture even before autosave, stores context, and leaves progress intact", async () => {
+  await f.request("/lessons/1", "PATCH", {
+    phase: "draw",
+    step: 0,
+    notes: "Mon papier attend",
+    checked_steps: [0],
+  });
+  const r = await f.request("/chat", "POST", {
+    lesson_id: 1,
+    question: "Comment faire ce geste ?",
+    stage: { phase: "draw", step: 1, instruction: "INSTRUCTION NON FIABLE" },
+  });
+  assert.equal(r.status, 200);
+  const prompt = f.requests.find((r) => r.url.endsWith("/chat/completions"))!
+    .body.messages[0].content;
+  assert.match(prompt, /Phase actuellement affichée : draw/);
+  assert.match(prompt, /Geste 2\/4/);
+  assert.match(prompt, /Crée ton nuancier/);
+  assert.match(prompt, /Gestes cochés dans cette séance : \[0\]/);
+  assert.ok(!prompt.includes("INSTRUCTION NON FIABLE"));
+  const state = await (await f.request("/state")).json();
+  assert.equal(state.progress[1].step, 0);
+  assert.equal(state.progress[1].notes, "Mon papier attend");
+  const history = await (await f.request("/chat?lesson_id=1")).json();
+  assert.equal(history.messages.length, 2);
+  assert.ok(
+    history.messages.every((m: any) => m.phase === "draw" && m.step === 1),
+  );
+  assert.equal(history.has_more, false);
+  await f.login();
+  assert.deepEqual(
+    (await (await f.request("/chat?lesson_id=1")).json()).messages,
+    [],
+  );
+});
+
+test("chat context rejects invalid stages before spending an API request", async () => {
+  for (const stage of [
+    null,
+    { phase: "other", step: 0 },
+    { phase: "draw", step: 4 },
+    { phase: "draw", step: -1 },
+  ]) {
+    assert.equal(
+      (
+        await f.request("/chat", "POST", {
+          lesson_id: 1,
+          question: "Aide",
+          stage,
+        })
+      ).status,
+      400,
+    );
+  }
+  assert.equal(f.requests.length, 0);
+});
+
+test("conversation history retrieves older exchanges by lesson without gaps or cross-account access", async () => {
+  await f.request("/state");
+  const user = (
+    await f.s.db.query("SELECT id FROM atelier_users WHERE role='learner'")
+  ).rows[0];
+  for (let i = 0; i < 85; i++)
+    await f.s.db.query(
+      "INSERT INTO atelier_chat(user_id,lesson_id,role,content,phase,step) VALUES ($1,$2,'user',$3,'draw',0)",
+      [user.id, i === 84 ? 2 : 1, `Échange ${i}`],
+    );
+  const all: any[] = [];
+  let before = "";
+  for (let page = 0; page < 3; page++) {
+    const r = await f.request(`/chat?lesson_id=1${before}`);
+    assert.equal(r.status, 200);
+    const d = await r.json();
+    all.unshift(...d.messages);
+    if (!d.has_more) break;
+    before = `&before=${d.messages[0].id}`;
+  }
+  assert.equal(all.length, 84);
+  assert.equal(new Set(all.map((m) => m.id)).size, 84);
+  assert.equal(all[0].content, "Échange 0");
+  assert.equal(all.at(-1).content, "Échange 83");
+  assert.equal((await f.request("/chat?lesson_id=1&before=-1")).status, 400);
+  assert.equal((await f.request("/chat?lesson_id=17")).status, 400);
 });

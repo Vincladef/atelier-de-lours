@@ -95,6 +95,18 @@ export async function fixtures() {
     },
   };
   const defaultFetch = s.fetch;
+  function enableVision() {
+    s.fetch = async (input, init) =>
+      String(input).endsWith("/models")
+        ? new Response(
+            JSON.stringify({
+              data: [
+                { id: "deepseek-flash", input_modalities: ["text", "image"] },
+              ],
+            }),
+          )
+        : defaultFetch(input, init);
+  }
   let cookie = "";
   async function request(
     path: string,
@@ -144,6 +156,7 @@ export async function fixtures() {
     mails,
     blobs,
     requests,
+    enableVision,
     request,
     login,
     reset,

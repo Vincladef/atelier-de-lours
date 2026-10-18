@@ -707,3 +707,219 @@ button:disabled {
     border: 0;
   }
 }
+
+/* Help stays beside the exercise; the mobile sheet follows the visual viewport. */
+.lesson-stage {
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 22px;
+}
+.lesson-stage .phase-nav {
+  margin-bottom: 16px;
+}
+.lesson-stage .content-sheet {
+  padding: 23px;
+}
+.lesson-stage .task-area {
+  min-height: 0;
+  gap: 10px;
+}
+.lesson-stage .task-area p {
+  margin: 0;
+}
+.lesson-stage .check-step {
+  margin: 0;
+  padding: 9px 0;
+  min-height: 44px;
+}
+.lesson-stage .lesson-foot {
+  margin-top: 18px;
+  padding-top: 14px;
+}
+.lesson-optional {
+  margin-top: 12px;
+  padding-top: 2px;
+}
+.lesson-optional > .dropdown {
+  margin-top: 4px;
+  padding-top: 0;
+}
+.lesson-side-tools > .dropdown {
+  margin-top: 3px;
+  padding-top: 0;
+}
+.owl-invitation,
+.lesson-chat-trigger,
+.lesson-chat-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.owl-portrait {
+  flex: 0 0 46px;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+}
+.owl-invitation h3 {
+  font-size: 21px;
+  margin: 0 0 4px;
+}
+.side-quiet .textbutton {
+  font-size: 15px;
+  min-height: 44px;
+}
+.side-quiet {
+  padding: 14px;
+}
+.lesson-chat-head {
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+.lesson-chat-head h2 {
+  font: 500 21px var(--serif);
+  margin: 0;
+}
+.lesson-chat-head p {
+  margin: 3px 0 0;
+  font-size: 14px;
+  color: var(--muted);
+}
+.lesson-chat-head > .icon-button {
+  margin-left: auto;
+  flex-shrink: 0;
+}
+.lesson-chat-panel[hidden] {
+  display: none;
+}
+.lesson-conversation {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.lesson-conversation .chatlog {
+  min-height: 150px;
+  max-height: 32dvh;
+  padding: 12px 0;
+  gap: 10px;
+  overscroll-behavior: contain;
+}
+.lesson-conversation .msg {
+  max-width: 96%;
+  padding: 10px 12px;
+  font-size: 16px;
+}
+.message-stage {
+  display: block;
+  margin: 0 0 6px;
+}
+.lesson-conversation .msg small {
+  font-size: 12px;
+}
+.lesson-conversation .chat-compose {
+  padding: 12px 0 0;
+  gap: 7px;
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+}
+.lesson-conversation .chat-compose input[type="text"] {
+  min-width: 0;
+  width: 100%;
+  font-size: 16px;
+}
+.lesson-conversation .chat-compose > .button {
+  grid-column: 2;
+  justify-self: end;
+  padding: 10px 15px;
+  min-height: 44px;
+}
+.lesson-conversation .attachment-preview,
+.lesson-conversation .error-message,
+.lesson-conversation .chat-compose > p {
+  grid-column: 1 / -1;
+  margin: 0;
+}
+.lesson-conversation .attachment-preview {
+  gap: 8px;
+  padding: 0;
+  max-height: 170px;
+  overflow: auto;
+}
+.lesson-conversation .attachment-preview img {
+  width: 60px;
+}
+.lesson-conversation .consent {
+  font-size: 14px;
+  line-height: 1.45;
+}
+.lesson-chat-sheet {
+  border: 1px solid var(--line);
+  border-radius: 18px 18px 0 0;
+  background: var(--paper, #f7f3e9);
+  color: var(--ink);
+  padding: 16px 18px max(14px, env(safe-area-inset-bottom));
+  position: fixed;
+  inset: auto 0 0;
+  margin: 0;
+  width: 100%;
+  max-width: none;
+  max-height: none;
+  overflow: hidden;
+}
+.lesson-chat-sheet[open] {
+  display: flex;
+  flex-direction: column;
+}
+.lesson-chat-sheet::backdrop {
+  background: #1f302b60;
+}
+.lesson-chat-sheet .lesson-conversation {
+  flex: 1;
+  min-height: 0;
+}
+.lesson-chat-sheet .chatlog {
+  flex: 1;
+  min-height: 0;
+  max-height: none;
+}
+.lesson-chat-sheet .chat-compose {
+  flex-shrink: 0;
+}
+.lesson-chat-trigger {
+  width: 100%;
+  padding: 10px 12px;
+  margin: 0 0 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #efe9db;
+  color: var(--forest);
+  text-align: left;
+  min-height: 60px;
+  font-weight: 600;
+  font-size: 16px;
+}
+@media (min-width: 881px) {
+  .lesson-stage .side-quiet {
+    position: sticky;
+    top: 100px;
+    max-height: calc(100dvh - 115px);
+    overflow-y: auto;
+  }
+}
+@media (max-width: 880px) {
+  .lesson-stage {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .lesson-stage .content-sheet {
+    padding: 20px;
+  }
+}
+.lesson-chat-sheet .chat-compose {
+  max-height: 65%;
+  overflow-y: auto;
+}
+.lesson-chat-sheet .attachment-preview {
+  max-height: 110px;
+}
+.lesson-stage .dropdown > summary {
+  font-size: 15px;
+}

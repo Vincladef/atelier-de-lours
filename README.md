@@ -85,3 +85,9 @@ Vérifier que l’identifiant retourné est celui du projet existant. Ne jamais 
 - Typographies : DM Sans et Fraunces, licences SIL dans `public/licenses/`.
 - DeepSeek : https://api-docs.deepseek.com/guides/vision et https://api-docs.deepseek.com/api/list-models.
 - Les résultats des tests et des intégrations réellement exécutés sont consignés dans `docs/VALIDATION.md`.
+
+## Aide intégrée aux séances
+
+`Conversation` est partagé entre la rubrique Maman Chouette et le panneau des cours. Le panneau reste dans la colonne de droite sur ordinateur et utilise un dialogue inférieur sur les petits écrans, ajusté à `visualViewport` pour laisser la saisie accessible avec le clavier. La fermeture conserve le brouillon et l’exercice monté.
+
+Le même `POST /api/chat` appelle DeepSeek. Le client transmet seulement les numéros de phase et de geste affichés ; le serveur vérifie ces valeurs et retrouve lui-même les consignes et objectifs dans le programme. Il complète le contexte avec la progression enregistrée. La migration `002_chat_stage.sql` conserve la phase et le geste de l’échange. `GET /api/chat?lesson_id=…&before=…` retrouve les conversations par séance, par pages de 40 messages, avec les mêmes règles de séparation des comptes. Les photos restent soumises au consentement explicite et à la validation existante.

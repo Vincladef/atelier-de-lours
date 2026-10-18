@@ -15,3 +15,8 @@ export function parisDate(date = new Date()) {
     day: "2-digit",
   }).format(date);
 }
+
+export interface LessonStage {
+  phase: "observe" | "draw" | "finish";
+  step: number;
+}
