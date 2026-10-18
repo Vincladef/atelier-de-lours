@@ -1,0 +1,709 @@
+:root {
+  --serif: "Fraunces Variable", Georgia, serif;
+  --muted: #60665c;
+}
+body {
+  font-size: 16px;
+}
+button,
+input,
+textarea,
+select {
+  font-size: inherit;
+}
+.site-main:focus {
+  outline: none;
+}
+button {
+  color: inherit;
+}
+button:disabled {
+  cursor: wait;
+}
+.button {
+  font-size: 14px;
+  min-height: 44px;
+}
+.textbutton {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+.navbtn {
+  font-size: 14px;
+  min-height: 44px;
+}
+.simple-input,
+.simple-textarea,
+.chat-compose input[type="text"] {
+  font-size: 16px;
+}
+.p-eyebrow {
+  color: #77553d;
+}
+.small,
+.optional {
+  font-size: 13px;
+}
+.pill {
+  font-size: 12px;
+}
+.head-avatar {
+  width: 44px;
+  height: 44px;
+  cursor: pointer;
+}
+.brand small {
+  color: #625d51;
+}
+.brand {
+  flex-shrink: 0;
+}
+.head-inner {
+  gap: 16px;
+}
+.mainnav {
+  min-width: 0;
+}
+.head-end {
+  flex-shrink: 0;
+}
+.photo-wrap {
+  position: relative;
+  overflow: hidden;
+  background: #ddd4bf;
+  min-height: 0;
+}
+.photo-unavailable {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  padding: 20px;
+  text-align: center;
+  font-size: 14px;
+  color: #4e5948;
+}
+.photo-wrap .photo-img {
+  min-height: inherit;
+}
+.chapter.open .chapter-lessons {
+  display: block;
+}
+.chapter-head {
+  text-align: left;
+  color: inherit;
+}
+.chapter-head h2 {
+  margin-top: 5px;
+}
+.chapter-copy {
+  min-width: 0;
+}
+.chapter-head .chapter-state {
+  flex-shrink: 0;
+}
+.lesson-row > span:nth-child(2) {
+  min-width: 0;
+}
+.chapter .chapter-lessons {
+  display: block;
+}
+.work-open {
+  border: 0;
+  padding: 0;
+  display: block;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+}
+.work-meta p {
+  font-size: 14px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.work-meta small {
+  font-size: 12px;
+}
+.book-strip img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+.empty-notebook {
+  padding: 30px 24px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+}
+.empty-notebook p {
+  margin: 0 0 12px;
+}
+.save-status {
+  font-size: 12px;
+  text-align: right;
+  color: #58634f;
+  min-height: 24px;
+  margin-top: 20px;
+}
+.save-warning {
+  background: #f2e3c8;
+  border: 1px solid #b48643;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 18px;
+  font-size: 15px;
+}
+.error-message {
+  background: #f7e7de;
+  color: #823c2a;
+  padding: 12px 16px;
+  border-left: 3px solid #ab5e40;
+  border-radius: 4px;
+  font-size: 15px;
+  overflow-wrap: anywhere;
+  width: 100%;
+  margin: 8px 0;
+}
+.loading {
+  padding: 70px 0;
+  text-align: center;
+}
+.login-hero {
+  min-height: 480px;
+}
+.login-hero form {
+  max-width: 380px;
+}
+.login-hero .hero-copy {
+  padding-top: 38px;
+}
+.login-hero .title {
+  font-size: clamp(34px, 4.6vw, 55px);
+}
+.login-hero .hero-visual {
+  min-height: 400px;
+}
+.login-hero form label {
+  font-weight: 600;
+}
+.login-hero form .button {
+  align-self: flex-start;
+}
+.skip-link {
+  position: fixed;
+  left: 20px;
+  top: -100px;
+  z-index: 150;
+  background: var(--forest);
+  color: white;
+  padding: 12px 18px;
+}
+.skip-link:focus {
+  top: 10px;
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+.modal {
+  border: 1px solid var(--line);
+  padding: 32px;
+  max-width: 680px;
+}
+.modal::backdrop {
+  background: #1e2c27a8;
+}
+.modal > h2 {
+  padding-right: 25px;
+  margin-bottom: 22px;
+}
+.close {
+  width: 44px;
+  height: 44px;
+  top: 8px;
+  right: 8px;
+  z-index: 2;
+}
+.file-input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  width: 100%;
+  cursor: pointer;
+}
+.upload-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.upload-actions label,
+.chat-compose > .icon-button {
+  position: relative;
+}
+.upload-actions label:focus-within,
+.chat-compose > .icon-button:focus-within {
+  outline: 3px solid #cd9163;
+  outline-offset: 3px;
+}
+.upload-preview {
+  width: 100%;
+  height: 220px;
+  object-fit: contain;
+  background: #e9e5d8;
+  border-radius: 8px;
+}
+.stack label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.stack label.button {
+  display: inline-flex;
+}
+.edit-art {
+  height: 280px;
+  background: #ece8dc;
+  margin-bottom: 20px;
+}
+.edit-art img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.work-art img {
+  display: block;
+}
+.compare-grid .art {
+  height: 240px;
+}
+.note-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 14px;
+}
+.mobile-lesson-help {
+  display: none;
+}
+.check-step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 24px 0 0;
+  font-size: 15px;
+  min-height: 44px;
+}
+.check-step input,
+.quiz input,
+.consent input {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  accent-color: var(--forest);
+}
+.timer-value {
+  font: 500 28px var(--serif);
+  font-variant-numeric: tabular-nums;
+}
+.chat-context {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--line);
+  font-size: 13px;
+  display: block;
+}
+.chat-context select {
+  margin-top: 5px;
+}
+.chat-side {
+  align-self: start;
+}
+.chat-card {
+  min-width: 0;
+}
+.chat-compose {
+  min-width: 0;
+}
+.chat-compose .icon-button {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  cursor: pointer;
+}
+.chat-compose input[type="text"] {
+  min-width: 100px;
+}
+.chat-compose .button {
+  flex-shrink: 0;
+}
+.msg {
+  overflow-wrap: anywhere;
+  font-size: 16px;
+}
+.attachment-preview {
+  width: 100%;
+  display: flex;
+  gap: 15px;
+  padding: 12px 0;
+  align-items: start;
+}
+.attachment-preview img {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+}
+.consent {
+  display: flex;
+  gap: 9px;
+  align-items: start;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.preserve-lines {
+  white-space: pre-line;
+}
+.mail-subject {
+  flex: 1;
+  min-width: 0;
+}
+.mail-preview {
+  overflow-wrap: anywhere;
+}
+.activation {
+  margin-top: 20px;
+  padding: 16px;
+  border: 1px solid #a56140;
+  border-radius: 9px;
+}
+.settings-page .setting strong {
+  font-size: 16px;
+}
+.settings-page .setting small {
+  font-size: 14px;
+}
+.studio-tools input[type="color"] {
+  width: 44px;
+  height: 40px;
+  border: 0;
+  padding: 0;
+  background: none;
+  cursor: pointer;
+}
+.studio-tools label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+.studio-tools input[type="range"] {
+  width: 90px;
+  min-height: 44px;
+}
+.studio-tools .swatch {
+  width: 32px;
+  height: 32px;
+}
+.studio-tools button.swatch {
+  min-height: 32px;
+}
+.studio-canvas {
+  display: block;
+  max-width: 100%;
+  border: 0;
+  outline: 1px solid #ddd4bc;
+  box-shadow: none;
+}
+.studio-layout aside {
+  align-self: start;
+}
+.natural-wrap button {
+  color: var(--ink);
+}
+.lesson-main {
+  min-width: 0;
+}
+.lesson-tools {
+  font-size: 14px;
+}
+.content-sheet p {
+  font-size: 16px;
+}
+.dropdown {
+  font-size: 15px;
+}
+.dropdown summary {
+  min-height: 44px;
+  padding: 10px 0;
+}
+.phase-btn {
+  min-height: 52px;
+  font-size: 15px;
+}
+.quiz label {
+  font-size: 15px;
+  min-height: 44px;
+}
+.form-row > label {
+  font-size: 15px;
+}
+.choice {
+  font-size: 14px;
+  min-height: 44px;
+}
+.lesson-foot {
+  gap: 14px;
+}
+.video-frame iframe {
+  border: 0;
+}
+.play-overlay {
+  width: 62px;
+  height: 62px;
+}
+.footer {
+  font-size: 13px;
+}
+.footer button {
+  min-height: 44px;
+}
+.letter .photo-wrap {
+  height: 210px;
+}
+.empty-notebook h2 {
+  color: var(--ink);
+}
+@media (max-width: 1000px) and (min-width: 641px) {
+  .brand {
+    min-width: 175px;
+  }
+  .navbtn {
+    padding: 10px 9px;
+    font-size: 13px;
+  }
+  .head-inner {
+    gap: 9px;
+  }
+}
+@media (max-width: 880px) {
+  .mobile-lesson-help {
+    display: block;
+    margin-top: 20px;
+    padding: 0 20px;
+  }
+  .side-quiet {
+    display: none;
+  }
+  .mainnav {
+    margin-left: auto;
+  }
+  .chat-side {
+    display: none;
+  }
+}
+@media (max-width: 640px) {
+  body {
+    font-size: 16px;
+  }
+  .title {
+    line-height: 1.15;
+  }
+  .hero-copy {
+    padding: 28px 24px;
+  }
+  .hero .title {
+    font-size: 40px;
+  }
+  .hero-copy .deck {
+    font-size: 16px;
+  }
+  .login-hero .hero-visual {
+    min-height: 235px;
+  }
+  .login-hero .hero-copy {
+    padding: 28px 24px;
+  }
+  .mobile-nav button {
+    font-size: 12px;
+    min-height: 52px;
+  }
+  .mobile-nav button.on {
+    background: #e7eadf;
+    border-radius: 8px;
+  }
+  .head-avatar {
+    width: 44px;
+    height: 44px;
+  }
+  .notebook-gallery {
+    gap: 18px 12px;
+  }
+  .work-meta {
+    padding: 10px 5px;
+  }
+  .work-meta .row {
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .work-meta .textbutton {
+    font-size: 13px;
+  }
+  .section-head {
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .compare-grid .art {
+    height: 160px;
+  }
+  .chat-compose {
+    gap: 7px;
+    padding: 12px;
+  }
+  .chat-compose .button {
+    font-size: 13px;
+    padding: 12px;
+  }
+  .chat-compose input[type="text"] {
+    width: 0;
+    min-width: 80px;
+  }
+  .chat-hero {
+    grid-template-columns: 75px 1fr;
+  }
+  .chat-hero .page-title {
+    font-size: 30px;
+  }
+  .chat-hero .deck {
+    font-size: 15px;
+  }
+  .chapter-state {
+    gap: 5px;
+  }
+  .chapter-copy h2 {
+    font-size: 20px;
+  }
+  .chapter-copy p {
+    display: none;
+  }
+  .chapter-copy .p-eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.09em;
+  }
+  .chapter-head .chapter-photo {
+    width: 72px;
+    min-width: 72px;
+    height: 100px;
+  }
+  .chapter-copy {
+    padding: 10px 8px;
+  }
+  .chapter-state .pill {
+    font-size: 12px;
+    padding: 4px 7px;
+  }
+  .chapter-state .chapter-arrow {
+    display: none;
+  }
+  .lesson-row {
+    gap: 9px;
+  }
+  .lesson-row strong {
+    font-size: 15px;
+  }
+  .lesson-row small {
+    font-size: 13px;
+  }
+  .row-end {
+    font-size: 12px;
+    white-space: nowrap;
+  }
+  .round-num {
+    min-width: 30px;
+  }
+  .chapter-lessons {
+    padding-right: 10px;
+  }
+  .phase-btn {
+    font-size: 14px;
+  }
+  .lesson-top h1 {
+    font-size: 33px;
+    overflow-wrap: anywhere;
+  }
+  .content-sheet {
+    padding: 22px 18px;
+  }
+  .lesson-foot .button {
+    font-size: 14px;
+  }
+  .modal {
+    padding: 30px 20px;
+    max-height: 88dvh;
+    width: calc(100% - 24px);
+  }
+  .modal > h2 {
+    font-size: 24px;
+  }
+  .notebook-head .deck {
+    margin-bottom: 0;
+  }
+  .natural-wrap .animal-select strong {
+    font-size: 17px;
+  }
+  .studio-tools {
+    gap: 12px;
+  }
+  .button {
+    min-height: 46px;
+  }
+  .featureline {
+    gap: 12px;
+  }
+  .featureline .num {
+    font-size: 31px;
+  }
+  .featureline strong {
+    font-size: 14px;
+  }
+  .save-status {
+    margin-top: 18px;
+  }
+  .toast {
+    font-size: 14px;
+  }
+  .attachment-preview img {
+    width: 75px;
+  }
+  .footer {
+    padding-bottom: 105px;
+  }
+}
+@media print {
+  .modal {
+    position: static;
+    max-height: none;
+  }
+  .work-meta .row,
+  .bonus-note,
+  .save-status {
+    display: none;
+  }
+  .notebook-gallery {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .work {
+    break-inside: avoid;
+  }
+  .site-main {
+    padding: 0;
+  }
+  .paper {
+    border: 0;
+  }
+}

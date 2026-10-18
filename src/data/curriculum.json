@@ -1,0 +1,1086 @@
+{
+  "project": "L’Atelier de l’Ours",
+  "version": "contenus-v1.0",
+  "created_on": "2026-10-18",
+  "methodology": "Vidéo → pratique pas à pas → bilan bref. Vidéos publiques repérées par titre, chaîne et description ; leur intégration effective reste à tester.",
+  "weeks": [
+    {
+      "index": 1,
+      "name": "Les premiers traits",
+      "subtitle": "Rencontrer le papier, la couleur et l’eau.",
+      "motto": "Même les ours commencent par un trait.",
+      "tag": "La découverte",
+      "goal": "Prendre confiance avec les feutres, essayer les effets de l’eau et réaliser une première petite image.",
+      "materials": [
+        "Feutres aquarellables",
+        "Papier aquarelle",
+        "Pinceau et eau",
+        "Chiffon"
+      ],
+      "cover": "strokes",
+      "completion": {
+        "title": "La couleur et l’eau",
+        "message": "Tu as appris à poser l’encre, la diluer et terminer un premier paysage.",
+        "question": "Quel effet t’a le plus surpris : un trait net, un dégradé ou le mélange de deux couleurs ?"
+      },
+      "lessons": [
+        {
+          "index": 1,
+          "week": 1,
+          "title": "Faire connaissance avec les feutres",
+          "desc": "Des traits, quelques couleurs, un peu d’eau. Et déjà beaucoup de possibilités.",
+          "minutes": 25,
+          "art": "strokes",
+          "objective": "Découvrir les gestes et observer la réaction des encres à l’eau.",
+          "steps": [
+            [
+              "Échauffe ta main",
+              "Trace cinq lignes, cinq courbes et cinq petits cercles."
+            ],
+            [
+              "Crée ton nuancier",
+              "Dessine huit carrés et colore-les avec huit teintes différentes."
+            ],
+            [
+              "Ajoute une goutte d’eau",
+              "Dilue trois bandes de couleur avec des quantités d’eau différentes."
+            ],
+            [
+              "Garde tes premiers essais",
+              "Note les effets qui te plaisent et ce qui t’a surpris."
+            ]
+          ],
+          "tip": "Un pinceau légèrement humide suffit. Trop d’eau transforme le papier en éponge, pas en œuvre d’art.",
+          "youtubeSearch": "feutres aquarellables prise en main débutant français",
+          "welcome": "Bienvenue dans ton atelier. Aujourd’hui, tu vas faire connaissance avec tes feutres. On ne cherche pas à fabriquer un chef-d’œuvre : on découvre simplement ce que peuvent faire la couleur, le papier et une goutte d’eau.",
+          "watch": "Dans la vidéo, observe trois gestes : déposer l’encre, l’étirer au pinceau humide et mélanger deux couleurs. Le dessin complexe présenté ensuite ne fait pas partie de ton exercice.",
+          "anchor": "Regarde si la couleur reste nette ou s’étale. Le même feutre peut donner des résultats très différents selon la quantité d’eau.",
+          "help": "Si le papier gondole, sèche doucement au chiffon et recommence avec moins d’eau, sur une nouvelle bande.",
+          "challenge": "Recommence le même trait avec deux quantités d’eau différentes ; conserve les deux essais.",
+          "quiz": "Quel geste transforme un trait de feutre aquarellable en zone colorée diffuse ?",
+          "choices": [
+            "Passer légèrement un pinceau humide",
+            "Gommer fortement",
+            "Appuyer sur la pointe"
+          ],
+          "answer": 0,
+          "end": "Tu sais maintenant utiliser un feutre à sec et avec de l’eau. Garde ton nuancier : ce sera le premier outil de ton carnet.",
+          "owl": "Une couleur qui bave n’est pas forcément ratée. C’est parfois elle qui prend les décisions.",
+          "video": {
+            "id": "YWDsWdIXMXc",
+            "title": "Comment bien se servir des feutres aquarelle ECOLINES BRUSH PEN",
+            "creator": "Miennu",
+            "focus": "Trois manières de travailler l’encre des feutres avec l’eau. Ne regarder que la prise en main ; le dessin détaillé de fin est facultatif.",
+            "fit": "Très proche du matériel, sous réserve de compatibilité avec les feutres offerts.",
+            "url": "https://www.youtube.com/watch?v=YWDsWdIXMXc",
+            "embed": "https://www.youtube-nocookie.com/embed/YWDsWdIXMXc"
+          }
+        },
+        {
+          "index": 2,
+          "week": 1,
+          "title": "Un soleil se couche",
+          "desc": "Ton premier paysage : quelques couleurs douces et une ligne d’horizon.",
+          "minutes": 30,
+          "art": "sunset",
+          "objective": "Créer une image complète à partir d’un dégradé et de silhouettes simples.",
+          "steps": [
+            [
+              "Dessine l’horizon",
+              "Au crayon, place une ligne un peu sous le milieu de la feuille."
+            ],
+            [
+              "Choisis trois teintes",
+              "Pose du jaune, du rose et une touche de bleu dans le ciel."
+            ],
+            [
+              "Adoucis les limites",
+              "Passe doucement un pinceau humide entre les bandes."
+            ],
+            [
+              "Ajoute le premier plan",
+              "Une colline sombre suffit à terminer ton coucher de soleil."
+            ]
+          ],
+          "tip": "Pour ce premier paysage, laisse au moins un peu de blanc. Le papier sait très bien jouer la lumière.",
+          "youtubeSearch": "coucher soleil aquarelle débutant français facile",
+          "welcome": "Aujourd’hui, tu vas faire ton premier paysage. Un ciel, une ligne d’horizon et une colline : trois ingrédients suffisent pour composer une image complète.",
+          "watch": "Observe dans la vidéo l’ordre des opérations : ciel, temps de séchage puis silhouettes sombres. Nous allons reprendre ce principe avec des feutres.",
+          "anchor": "Commence par des couleurs claires. Laisse sécher avant d’ajouter la colline ; sinon ses contours risquent de se mélanger au ciel.",
+          "help": "Si tes couleurs produisent du brun, cesse de travailler la zone. Laisse sécher et essaye un second ciel avec deux couleurs seulement.",
+          "challenge": "Peins un second ciel en utilisant uniquement deux couleurs et une zone blanche.",
+          "quiz": "Pourquoi attendre le séchage du ciel avant de dessiner une colline sombre ?",
+          "choices": [
+            "Pour garder un contour lisible",
+            "Pour rendre le ciel plus humide",
+            "Pour effacer plus facilement la colline"
+          ],
+          "answer": 0,
+          "end": "Ta première image est terminée. Tu peux la photographier, lui donner un titre et la ranger dans ton carnet.",
+          "owl": "Un ours capable de peindre un horizon mérite au moins cinq minutes de contemplation.",
+          "video": {
+            "id": "WRLOogb_vhE",
+            "title": "( Facile ) Coucher de soleil aquarelle pour débutants",
+            "creator": "Aquarelle facile",
+            "focus": "Peindre un ciel simple sans accélération excessive ; conserver l’idée des silhouettes après séchage.",
+            "fit": "Aquarelle classique : préparer les couleurs avec les feutres sur une palette.",
+            "url": "https://www.youtube.com/watch?v=WRLOogb_vhE",
+            "embed": "https://www.youtube-nocookie.com/embed/WRLOogb_vhE"
+          }
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "name": "L’œil de l’artiste",
+      "subtitle": "Observer les formes avant de dessiner.",
+      "motto": "Une tasse n’est jamais qu’un ovale avec de l’ambition.",
+      "tag": "L’observation",
+      "goal": "Comprendre comment décomposer un objet en formes simples, sans chercher la perfection.",
+      "materials": [
+        "Crayon HB",
+        "Gomme",
+        "Tasse",
+        "Papier à dessin"
+      ],
+      "cover": "cup",
+      "completion": {
+        "title": "Les formes sous les objets",
+        "message": "Tu sais découper un objet en formes simples et dessiner une tasse en regardant un vrai modèle.",
+        "question": "Quel objet de la maison aimerais-tu dessiner une prochaine fois ?"
+      },
+      "lessons": [
+        {
+          "index": 3,
+          "week": 2,
+          "title": "Voir les formes cachées",
+          "desc": "Cercles, ovales, rectangles : le monde se simplifie lorsqu’on le regarde autrement.",
+          "minutes": 30,
+          "art": "shapes",
+          "objective": "Décomposer les objets réels en formes géométriques simples.",
+          "steps": [
+            [
+              "Échauffe-toi",
+              "Dessine dix cercles et dix ovales, sans règle ni compas."
+            ],
+            [
+              "Observe trois objets",
+              "Choisis un livre, une tasse et un fruit posés devant toi."
+            ],
+            [
+              "Cherche leur structure",
+              "Représente chaque objet avec deux ou trois formes."
+            ],
+            [
+              "Compare et ajuste",
+              "Regarde ton modèle et rectifie seulement un ou deux détails."
+            ]
+          ],
+          "tip": "Dessiner ce que l’on voit n’est pas la même chose que dessiner ce que l’on croit connaître.",
+          "youtubeSearch": "apprendre dessin formes géométriques observation débutant",
+          "welcome": "Dessiner commence souvent avant même de toucher le papier : il faut apprendre à regarder. Une tasse, une pomme ou un livre deviennent plus faciles lorsque tu reconnais leurs formes simples.",
+          "watch": "Écoute comment le démonstrateur construit un objet en partant de figures géométriques. Ne te préoccupe pas encore des ombres.",
+          "anchor": "Compare la hauteur et la largeur de chaque forme avant d’ajouter les détails. Une grande forme juste vaut mieux que dix petits ornements.",
+          "help": "Si l’objet paraît de travers, dessine d’abord un simple rectangle qui l’entoure. Il t’aidera à situer les proportions.",
+          "challenge": "Dessine le même objet avec seulement trois traits et deux formes géométriques.",
+          "quiz": "Quelle est la meilleure première étape pour dessiner une tasse ?",
+          "choices": [
+            "Placer sa forme générale",
+            "Dessiner les reflets sur l’anse",
+            "Représenter chaque détail du décor"
+          ],
+          "answer": 0,
+          "end": "Tu as découvert un outil très utile : simplifier ce que tu vois. Cette méthode te servira pendant toute la formation.",
+          "owl": "Je confirme : même les objets les plus sérieux cachent des ovales.",
+          "video": {
+            "id": "ZCf9bB1nb7o",
+            "title": "Astuces pour dessiner comme un pro",
+            "creator": "Minute Facile",
+            "focus": "Comprendre comment un objet quotidien se construit à partir de formes géométriques.",
+            "fit": "Exercice au crayon directement transposable.",
+            "url": "https://www.youtube.com/watch?v=ZCf9bB1nb7o",
+            "embed": "https://www.youtube-nocookie.com/embed/ZCf9bB1nb7o"
+          }
+        },
+        {
+          "index": 4,
+          "week": 2,
+          "title": "Une tasse, une vraie",
+          "desc": "Le premier objet du quotidien à prendre forme sous ton crayon.",
+          "minutes": 30,
+          "art": "cup",
+          "objective": "Observer puis dessiner un objet simple avec ses proportions.",
+          "steps": [
+            [
+              "Place une tasse devant toi",
+              "Choisis une tasse sobre, sous une lumière douce."
+            ],
+            [
+              "Pose les grandes formes",
+              "Un rectangle pour le corps, un ovale pour le bord."
+            ],
+            [
+              "Ajoute l’anse",
+              "Observe sa taille et le point où elle rejoint la tasse."
+            ],
+            [
+              "Mets en couleur",
+              "Un peu de couleur sur un côté et une ombre sous la tasse."
+            ]
+          ],
+          "tip": "L’ovale du haut est rarement un cercle parfait. C’est précisément ce qui rend la tasse crédible.",
+          "youtubeSearch": "dessiner tasse café facilement débutant français",
+          "welcome": "Place une vraie tasse devant toi. L’exercice du jour consiste à la regarder attentivement avant de tracer son contour. Tu peux choisir ta tasse préférée ; inutile qu’elle soit photogénique.",
+          "watch": "Observe l’ellipse de l’ouverture, les proportions du corps et la manière dont l’anse s’y rattache.",
+          "anchor": "Dessine sans appuyer fort. Tu dois pouvoir déplacer une ligne si tu te rends compte qu’elle n’est pas à la bonne place.",
+          "help": "Si le haut de la tasse semble étrange, regarde-le comme un ovale aplati plutôt que comme un cercle.",
+          "challenge": "Fais deux croquis de la tasse : l’un de face, l’autre légèrement de côté.",
+          "quiz": "Vue légèrement de dessus, l’ouverture d’une tasse ressemble surtout à…",
+          "choices": [
+            "Un ovale",
+            "Un carré",
+            "Un triangle"
+          ],
+          "answer": 0,
+          "end": "Tu as réalisé ton premier dessin d’observation d’un objet réel. Garde-le pour le comparer à un prochain essai.",
+          "owl": "Cette tasse a désormais un portrait officiel. Elle peut retourner à son café.",
+          "video": {
+            "id": "NZNInW_5hp4",
+            "title": "Dessiner une tasse à café facilement – Tutoriel de dessin pas à pas (débutants)",
+            "creator": "Aude Tout Dessiner - Dessin & Aquarelle",
+            "focus": "Le corps de la tasse, l’ellipse supérieure et l’anse.",
+            "fit": "Très bon sujet d’observation pour débuter.",
+            "url": "https://www.youtube.com/watch?v=NZNInW_5hp4",
+            "embed": "https://www.youtube-nocookie.com/embed/NZNInW_5hp4"
+          }
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "name": "L’ombre & la lumière",
+      "subtitle": "Le secret des objets qui prennent vie.",
+      "motto": "Même une pomme mérite son heure de gloire.",
+      "tag": "Le volume",
+      "goal": "Repérer la lumière, placer les zones d’ombre et suggérer le relief.",
+      "materials": [
+        "Crayon HB",
+        "Pomme",
+        "Lampe",
+        "Feutres aquarellables"
+      ],
+      "cover": "apple",
+      "completion": {
+        "title": "Lumière et volumes",
+        "message": "Tu repères une source lumineuse et tu sais rendre un fruit plus volumineux.",
+        "question": "Qu’est-ce qui te paraît le plus difficile : la silhouette ou le placement de l’ombre ?"
+      },
+      "lessons": [
+        {
+          "index": 5,
+          "week": 3,
+          "title": "La lumière entre en scène",
+          "desc": "Avec une simple lampe, découvre ce qui donne du volume aux objets.",
+          "minutes": 30,
+          "art": "sphere",
+          "objective": "Distinguer zones éclairées et ombres pour représenter le volume.",
+          "steps": [
+            [
+              "Observe un fruit",
+              "Place-le près d’une lampe, puis cherche le côté le plus clair."
+            ],
+            [
+              "Repère l’ombre portée",
+              "Observe l’ombre projetée sur la table."
+            ],
+            [
+              "Prépare trois valeurs",
+              "Dessine trois carrés : clair, moyen et foncé."
+            ],
+            [
+              "Dessine une sphère",
+              "Utilise ces trois valeurs pour donner du relief à un cercle."
+            ]
+          ],
+          "tip": "Une seule source de lumière permet de comprendre beaucoup de choses. La physique fait une apparition discrète.",
+          "youtubeSearch": "dessin ombre lumière sphère débutant français",
+          "welcome": "Un cercle dessiné au crayon paraît souvent plat. Pourtant, quelques ombres suffisent à lui donner l’apparence d’une boule. Aujourd’hui, tu vas comprendre ce petit tour de passe-passe.",
+          "watch": "Repère d’où vient la lumière dans la démonstration ; observe ensuite où se trouvent la zone claire et l’ombre projetée.",
+          "anchor": "Pour ton exercice, trois valeurs suffisent : clair, intermédiaire, foncé. Ne cherche pas à produire un dégradé parfaitement lisse.",
+          "help": "Si tu ne sais pas où placer l’ombre, pose une lampe à gauche d’une pomme et regarde ce qui se passe à droite.",
+          "challenge": "Déplace la lampe de l’autre côté puis refais rapidement la sphère.",
+          "quiz": "Si la lumière vient de la gauche, où se situe généralement le côté le plus sombre ?",
+          "choices": [
+            "À droite",
+            "Au centre lumineux",
+            "Toujours en haut"
+          ],
+          "answer": 0,
+          "end": "Tu sais repérer une source de lumière et utiliser trois valeurs pour créer du relief.",
+          "owl": "La lumière est une excellente professeur. Elle ne fait presque jamais de discours.",
+          "video": {
+            "id": "WBPL5MEu39U",
+            "title": "[DESSINER-FACILE] Dessiner facilement des ombrages, jeux de lumière",
+            "creator": "dessiner facile",
+            "focus": "Repérer la source de lumière et différencier zones claires et ombrées.",
+            "fit": "Regarder la partie sur la direction de la lumière, puis réaliser l’exercice original sur une sphère.",
+            "url": "https://www.youtube.com/watch?v=WBPL5MEu39U",
+            "embed": "https://www.youtube-nocookie.com/embed/WBPL5MEu39U"
+          }
+        },
+        {
+          "index": 6,
+          "week": 3,
+          "title": "La pomme qui a du relief",
+          "desc": "Premier petit dessin d’observation coloré et ombré.",
+          "minutes": 35,
+          "art": "apple",
+          "objective": "Transformer une forme plate en fruit coloré avec du volume.",
+          "steps": [
+            [
+              "Observe une vraie pomme",
+              "Regarde son contour irrégulier et sa tige."
+            ],
+            [
+              "Dessine sa silhouette",
+              "Fais un contour souple, sans insister sur les détails."
+            ],
+            [
+              "Pose les premières couleurs",
+              "Conserve une zone plus claire là où arrive la lumière."
+            ],
+            [
+              "Renforce les ombres",
+              "Ajoute la tige et l’ombre sous le fruit."
+            ]
+          ],
+          "tip": "Une pomme n’a pas besoin d’être ronde comme un ballon. Ses irrégularités font sa personnalité.",
+          "youtubeSearch": "dessiner pomme ombre lumière crayon débutant français",
+          "welcome": "Retour aux objets réels. La pomme de cette séance aura une forme un peu irrégulière, une zone claire et une ombre au sol. C’est cette combinaison qui lui donnera du volume.",
+          "watch": "Observe comment la silhouette est construite au crayon, puis la place de la tige et des ombres. Ajoute toi-même la couleur avec tes feutres.",
+          "anchor": "Garde une petite zone blanche ou très claire du côté de la lumière. Renforce progressivement les ombres plutôt que de saturer la page.",
+          "help": "Si ta pomme ressemble à une balle de tennis, ajoute un petit creux près de la tige et observe ses deux épaules.",
+          "challenge": "Dessine une deuxième pomme, plus petite, avec une direction lumineuse différente.",
+          "quiz": "Quel détail aide le plus à donner du volume à la pomme ?",
+          "choices": [
+            "Une différence de valeurs entre clair et foncé",
+            "Un contour noir uniforme",
+            "Un fond entièrement rouge"
+          ],
+          "answer": 0,
+          "end": "Ta première nature morte est achevée. Tu peux comparer ce dessin à la sphère de la séance précédente.",
+          "owl": "Je reconnais une pomme. C’est rassurant pour la botanique et pour le goûter.",
+          "video": {
+            "id": "5DEbtyUNnQ8",
+            "title": "Comment dessiner une pomme au crayon facilement",
+            "creator": "Comment Dessiner",
+            "focus": "Dessiner la silhouette d’une pomme, ses détails et les zones d’ombre.",
+            "fit": "Ajouter la mise en couleur aux feutres après la démonstration au crayon.",
+            "url": "https://www.youtube.com/watch?v=5DEbtyUNnQ8",
+            "embed": "https://www.youtube-nocookie.com/embed/5DEbtyUNnQ8"
+          }
+        }
+      ]
+    },
+    {
+      "index": 4,
+      "name": "Carnet botanique",
+      "subtitle": "Feuilles, fleurs et petites merveilles.",
+      "motto": "Une feuille ne se pressera pas pour poser.",
+      "tag": "La nature",
+      "goal": "Dessiner les gestes du vivant : courbes, tiges, feuilles et fleurs simples.",
+      "materials": [
+        "Quelques feuilles réelles",
+        "Papier aquarelle",
+        "Feutres verts",
+        "Pinceau"
+      ],
+      "cover": "botanic",
+      "completion": {
+        "title": "Le geste botanique",
+        "message": "Tu as appris à dessiner des feuilles puis à créer une composition de plantes.",
+        "question": "Quelle forme de feuille ou de fleur as-tu envie de refaire ?"
+      },
+      "lessons": [
+        {
+          "index": 7,
+          "week": 4,
+          "title": "Le langage des feuilles",
+          "desc": "Des lignes courbes et des silhouettes qui respirent.",
+          "minutes": 30,
+          "art": "leaves",
+          "objective": "Observer les courbes des tiges et la forme des feuilles.",
+          "steps": [
+            [
+              "Trace des tiges libres",
+              "Dix lignes courbes, lentes et souples."
+            ],
+            [
+              "Explore trois formes",
+              "Feuille ovale, pointue et arrondie."
+            ],
+            [
+              "Observe une vraie feuille",
+              "Dessine sa silhouette, puis sa nervure centrale."
+            ],
+            [
+              "Mets en vert",
+              "Essaye deux nuances avec un pinceau légèrement humide."
+            ]
+          ],
+          "tip": "Les feuilles d’un même arbre ne sont pas des photocopies. Tant mieux.",
+          "youtubeSearch": "dessiner feuilles arbres simples dessin botanique débutant",
+          "welcome": "En forêt, les feuilles offrent une immense collection de silhouettes. Nous allons en dessiner quelques-unes, en prenant le temps de regarder leurs courbes et leur nervure principale.",
+          "watch": "Cherche le geste qui crée le contour général. Tu n’as pas besoin de reproduire les détails fins de toutes les feuilles de la vidéo.",
+          "anchor": "Dessine la nervure centrale en premier, puis installe les bords autour. Pense à varier les tailles et les inclinaisons.",
+          "help": "Si une feuille est trop compliquée, choisis-en une plus simple et cache les détails avec la main pour ne regarder que sa silhouette.",
+          "challenge": "Dessine trois feuilles de mémoire, puis compare-les à tes modèles.",
+          "quiz": "Pour commencer une feuille, quel repère est souvent le plus utile ?",
+          "choices": [
+            "Sa nervure centrale",
+            "Chaque petite dent du bord",
+            "Le nombre exact de taches"
+          ],
+          "answer": 0,
+          "end": "Tu sais observer les formes végétales et utiliser un trait souple. La prochaine séance te permettra de composer une petite planche botanique.",
+          "owl": "Je connais beaucoup de feuilles. Aucune ne m’a encore demandé de refaire son portrait.",
+          "video": {
+            "id": "EiMMAKOB53A",
+            "title": "TUTO #36: Comment dessiner des feuilles très rapidement",
+            "creator": "May",
+            "focus": "Observer le contour et les nervures de feuilles ; reprendre uniquement un motif simple.",
+            "fit": "Le rendu final peut paraître ambitieux ; le cours réduit volontairement le nombre de détails.",
+            "url": "https://www.youtube.com/watch?v=EiMMAKOB53A",
+            "embed": "https://www.youtube-nocookie.com/embed/EiMMAKOB53A"
+          }
+        },
+        {
+          "index": 8,
+          "week": 4,
+          "title": "Ma petite planche botanique",
+          "desc": "Quelques branches, une fleur et une composition à offrir.",
+          "minutes": 35,
+          "art": "botanic",
+          "objective": "Créer une illustration végétale équilibrée en combinant plusieurs éléments.",
+          "steps": [
+            [
+              "Choisis tes modèles",
+              "Une fleur et deux types de feuilles suffisent."
+            ],
+            [
+              "Organise la page",
+              "Place les tiges avant d’ajouter les pétales."
+            ],
+            [
+              "Ajoute la couleur",
+              "Des tons doux, avec quelques mélanges légers."
+            ],
+            [
+              "Signe ton dessin",
+              "Ajoute la date et, si tu veux, le nom des plantes."
+            ]
+          ],
+          "tip": "Tu peux laisser du blanc autour des branches. C’est un vrai choix de composition, pas un oubli.",
+          "youtubeSearch": "dessiner fleur botanique débutant feutre aquarellable",
+          "welcome": "Tu vas réunir une fleur et quelques feuilles sur la même page. Le but n’est pas de remplir tout l’espace, mais de composer une image qui respire.",
+          "watch": "Regarde comment le centre et les pétales sont placés avant les détails. Puis construis ta propre composition avec les feuilles apprises précédemment.",
+          "anchor": "Trace d’abord trois tiges très légères pour répartir les éléments. Ajoute les fleurs et les feuilles autour, puis colore en douceur.",
+          "help": "Si la composition paraît chargée, supprime une branche ou un détail. Une zone blanche est aussi un choix artistique.",
+          "challenge": "Refais la composition en laissant la moitié supérieure de la feuille presque vide.",
+          "quiz": "Que faire lorsqu’une planche botanique semble trop chargée ?",
+          "choices": [
+            "Retirer un élément et ménager du blanc",
+            "Ajouter une autre fleur",
+            "Foncer tous les contours"
+          ],
+          "answer": 0,
+          "end": "Tu as terminé ta première petite planche botanique. Date-la et ajoute-la à ton carnet.",
+          "owl": "Une fleur, trois feuilles et suffisamment de place pour que tout le monde respire.",
+          "video": {
+            "id": "DrERbRxU77c",
+            "title": "[DESSINER-FACILE] dessiner une fleur etape par etape",
+            "creator": "dessiner facile",
+            "focus": "Construire une fleur avec un centre, des pétales et une tige.",
+            "fit": "Compléter la fleur par des feuilles réelles et une palette réduite.",
+            "url": "https://www.youtube.com/watch?v=DrERbRxU77c",
+            "embed": "https://www.youtube-nocookie.com/embed/DrERbRxU77c"
+          }
+        }
+      ]
+    },
+    {
+      "index": 5,
+      "name": "Les couleurs des bois",
+      "subtitle": "Dégradés, mélanges et automne.",
+      "motto": "Les arbres ont choisi leur garde-robe.",
+      "tag": "La couleur",
+      "goal": "Observer la couleur, fabriquer des dégradés et travailler les superpositions.",
+      "materials": [
+        "Feutres de plusieurs couleurs",
+        "Papier aquarelle",
+        "Palette ou assiette",
+        "Pinceau"
+      ],
+      "cover": "tree",
+      "completion": {
+        "title": "Une palette à toi",
+        "message": "Tu sais préparer un dégradé et réunir plusieurs couleurs dans un arbre.",
+        "question": "Quelle combinaison de couleurs voudrais-tu réutiliser ?"
+      },
+      "lessons": [
+        {
+          "index": 9,
+          "week": 5,
+          "title": "L’alchimie des couleurs",
+          "desc": "Quelques expériences pour comprendre les mélanges et les transparences.",
+          "minutes": 30,
+          "art": "mix",
+          "objective": "Varier l’intensité des couleurs et tester les superpositions.",
+          "steps": [
+            [
+              "Une couleur, cinq intensités",
+              "Fabrique cinq petits carrés du plus clair au plus intense."
+            ],
+            [
+              "Deux couleurs se rencontrent",
+              "Mélange deux encres sur une assiette puis applique au papier."
+            ],
+            [
+              "Sec et humide",
+              "Compare les pigments sur une feuille sèche et légèrement humidifiée."
+            ],
+            [
+              "Ajoute une couche",
+              "Attends le séchage complet, puis repasse sur une petite zone."
+            ]
+          ],
+          "tip": "La couleur prend parfois sa propre initiative. C’est la partie la plus diplomatique du dessin.",
+          "youtubeSearch": "mélange couleurs dégradé feutres aquarellables débutant",
+          "welcome": "Aujourd’hui, place aux expérimentations. Une couleur peut être claire ou intense ; deux encres peuvent se mélanger ; certaines couches restent transparentes lorsqu’elles sèchent.",
+          "watch": "Observe la manière de préparer les mélanges dans la vidéo. Nous n’utilisons pas exactement la même matière : adapte donc les gestes aux encres de tes feutres.",
+          "anchor": "Teste les mélanges sur une feuille séparée. Ajoute peu d’eau à la fois et laisse sécher avant de superposer une nouvelle couche.",
+          "help": "Si un mélange devient boueux, essaie deux couleurs voisines et utilise de l’eau propre.",
+          "challenge": "Compose une palette de cinq nuances automnales et donne un nom à chacune.",
+          "quiz": "Pour éclaircir une encre aquarellable sur le papier, que peut-on faire ?",
+          "choices": [
+            "La diluer davantage avec de l’eau",
+            "Ajouter forcément du noir",
+            "Frotter avec le crayon HB"
+          ],
+          "answer": 0,
+          "end": "Tu possèdes maintenant ton petit laboratoire des couleurs. Conserve tes essais : tu pourras les réutiliser dans un arbre d’automne.",
+          "owl": "J’ai vérifié les mélanges. Plusieurs sont prometteurs ; aucun ne demande un diplôme de chimie.",
+          "video": {
+            "id": "sfW52hvlPkc",
+            "title": "Débuter l’aquarelle : préparer et mélanger les couleurs",
+            "creator": "Brins d’artistes",
+            "focus": "Comprendre le mélange et préparer les couleurs, puis effectuer les mêmes tests avec les encres des feutres.",
+            "fit": "Différence de matériel à expliquer : les mélanges de pigments et d’encres ne se comportent pas toujours pareil.",
+            "url": "https://www.youtube.com/watch?v=sfW52hvlPkc",
+            "embed": "https://www.youtube-nocookie.com/embed/sfW52hvlPkc"
+          }
+        },
+        {
+          "index": 10,
+          "week": 5,
+          "title": "Un arbre en habit d’automne",
+          "desc": "Une silhouette de tronc, puis des touches d’ocre, de rouge et d’or.",
+          "minutes": 35,
+          "art": "tree",
+          "objective": "Associer des textures colorées pour dessiner un arbre.",
+          "steps": [
+            [
+              "Dessine le tronc",
+              "Une ligne qui se divise en branches irrégulières."
+            ],
+            [
+              "Pose le feuillage",
+              "Des touches de jaune, orange et rouille."
+            ],
+            [
+              "Crée quelques fondus",
+              "Humidifie certaines zones sans tout mélanger."
+            ],
+            [
+              "Ajoute les détails",
+              "Branches fines, racines et quelques feuilles tombées."
+            ]
+          ],
+          "tip": "Un arbre, comme un ours, a le droit d’avoir un côté un peu décoiffé.",
+          "youtubeSearch": "dessiner arbre automne aquarelle débutant français",
+          "welcome": "Ton prochain dessin sera un arbre d’automne. Tu sais construire des formes, observer des feuilles et mélanger les couleurs ; il est temps de réunir tout cela sur une même page.",
+          "watch": "Observe comment le tronc se divise en branches et comment les groupes de feuillage se répartissent. La palette d’automne sera notre ajout personnel.",
+          "anchor": "Commence par les grandes masses de couleur. Laisse sécher, puis ajoute quelques branches fines et feuilles isolées.",
+          "help": "Si ton arbre ressemble à une boule posée sur un bâton, fais apparaître quelques trous entre les masses de feuilles et varie la silhouette.",
+          "challenge": "Dessine seulement la silhouette de l’arbre, sans détails, en moins de trois minutes.",
+          "quiz": "Pour rendre un arbre plus naturel, quel choix est préférable ?",
+          "choices": [
+            "Varier les masses et les espaces du feuillage",
+            "Rendre la couronne parfaitement symétrique",
+            "Dessiner toutes les feuilles de la même taille"
+          ],
+          "answer": 0,
+          "end": "Ton arbre possède une structure et une palette. Tu peux le photographier ou faire une seconde version avec moins de détails.",
+          "owl": "Les arbres ont une certaine liberté capillaire. Je défends ce droit.",
+          "video": {
+            "id": "bJLxqBopp20",
+            "title": "Dessiner un Arbre | Apprendre à dessiner",
+            "creator": "SIKANA Français",
+            "focus": "Construire un arbre à partir de masses de feuillage et d’un tronc.",
+            "fit": "Faire soi-même la coloration automnale au pinceau humide.",
+            "url": "https://www.youtube.com/watch?v=bJLxqBopp20",
+            "embed": "https://www.youtube-nocookie.com/embed/bJLxqBopp20"
+          }
+        }
+      ]
+    },
+    {
+      "index": 6,
+      "name": "La maison dans la forêt",
+      "subtitle": "Comprendre les distances et les volumes.",
+      "motto": "Un toit de travers ? Appelons ça du charme.",
+      "tag": "La profondeur",
+      "goal": "Créer une impression de perspective avec des tailles, des chemins et une maison.",
+      "materials": [
+        "Crayon HB",
+        "Règle facultative",
+        "Gomme",
+        "Feutres aquarellables"
+      ],
+      "cover": "house",
+      "completion": {
+        "title": "Des scènes qui ont de la profondeur",
+        "message": "Tu peux construire un chemin, une petite maison et plusieurs niveaux de distance.",
+        "question": "Est-ce la construction de la maison ou du chemin qui t’a demandé le plus d’attention ?"
+      },
+      "lessons": [
+        {
+          "index": 11,
+          "week": 6,
+          "title": "La profondeur sans migraine",
+          "desc": "Trois petites astuces pour faire reculer le paysage.",
+          "minutes": 30,
+          "art": "perspective",
+          "objective": "Suggérer l’éloignement avec les tailles, les superpositions et le chemin.",
+          "steps": [
+            [
+              "Dessine trois arbres",
+              "Le premier grand, le deuxième moyen, le dernier petit."
+            ],
+            [
+              "Fais disparaître un chemin",
+              "Deux bords qui se rapprochent en direction de l’horizon."
+            ],
+            [
+              "Fais passer un objet devant l’autre",
+              "Un arbre masque partiellement une colline."
+            ],
+            [
+              "Compose une petite scène",
+              "Associe ces effets dans un dessin simple."
+            ]
+          ],
+          "tip": "La perspective est une affaire de regard. Pas besoin de sortir une calculatrice.",
+          "youtubeSearch": "profondeur perspective dessin paysage débutant",
+          "welcome": "Comment faire sentir qu’un chemin s’éloigne ou qu’un arbre est au fond d’un paysage ? Nous allons travailler la profondeur sans nous perdre dans la géométrie.",
+          "watch": "Repère le chemin qui s’éloigne, les éléments de tailles différentes et leur position par rapport à l’horizon.",
+          "anchor": "Il suffit d’utiliser trois indices : plus petit au loin, partiellement caché et moins contrasté. Tu n’as pas besoin d’une règle.",
+          "help": "Si tous les arbres paraissent au même endroit, dessine-en un beaucoup plus petit et fais-le passer derrière une colline.",
+          "challenge": "Crée une petite allée forestière en n’utilisant que deux arbres et un chemin.",
+          "quiz": "Quel indice suggère qu’un arbre est plus éloigné ?",
+          "choices": [
+            "Il paraît plus petit",
+            "Il est toujours plus noir",
+            "Il doit être à gauche"
+          ],
+          "answer": 0,
+          "end": "Tu sais utiliser la taille, les superpositions et le chemin pour suggérer la distance.",
+          "owl": "Je viens d’examiner ton chemin. Il mène quelque part. C’est déjà une réussite de l’urbanisme.",
+          "video": {
+            "id": "zweJw_JLf2c",
+            "title": "Comment dessiner un paysage au crayon | Dessin paysage facile étape par étape",
+            "creator": "Facile à Dessiner",
+            "focus": "Découvrir le chemin, l’horizon et les éléments de tailles différentes.",
+            "fit": "Ne pas recopier tous les détails ; isoler les trois indices de profondeur.",
+            "url": "https://www.youtube.com/watch?v=zweJw_JLf2c",
+            "embed": "https://www.youtube-nocookie.com/embed/zweJw_JLf2c"
+          }
+        },
+        {
+          "index": 12,
+          "week": 6,
+          "title": "La maison au fond du chemin",
+          "desc": "Quelques formes et une maison de campagne apparaît.",
+          "minutes": 35,
+          "art": "house",
+          "objective": "Construire une petite habitation et l’intégrer à un paysage.",
+          "steps": [
+            [
+              "Bâtis la façade",
+              "Dessine un grand rectangle et un toit triangulaire."
+            ],
+            [
+              "Ouvre les fenêtres",
+              "Ajoute deux fenêtres et une porte."
+            ],
+            [
+              "Trace le chemin",
+              "Un chemin s’élargit progressivement vers le bas de la page."
+            ],
+            [
+              "Habille la scène",
+              "Un arbre, deux buissons et une palette de cinq couleurs."
+            ]
+          ],
+          "tip": "Si ton toit penche un peu, on pourra dire que c’est une ancienne maison de caractère.",
+          "video": {
+            "id": "jB3sLnQN7kk",
+            "title": "Comment dessiner une maison au crayon de papier | Tutoriel facile et structuré pas à pas",
+            "creator": "TutoDessin How to Draw",
+            "focus": "Construire une maison avec façades, fenêtres, porte, toit et perspective élémentaire.",
+            "fit": "La maison du cours sera plus simple que le résultat présenté par la vidéo.",
+            "url": "https://www.youtube.com/watch?v=jB3sLnQN7kk",
+            "embed": "https://www.youtube-nocookie.com/embed/jB3sLnQN7kk"
+          },
+          "youtubeSearch": "maison perspective débutant dessin français",
+          "welcome": "Une maison paraît complexe jusqu’au moment où l’on y retrouve un rectangle, un triangle et quelques petites fenêtres. Aujourd’hui, tu bâtis la tienne au milieu des bois.",
+          "watch": "Regarde comment s’assemblent la façade, le toit et les ouvertures. Nous garderons une architecture volontairement simple.",
+          "anchor": "Dessine d’abord le toit et la façade ; ajoute les fenêtres plus tard, lorsque la silhouette est équilibrée.",
+          "help": "Si les fenêtres ne sont pas parfaitement alignées, n’efface pas toute la maison. Compare plutôt leur hauteur.",
+          "challenge": "Dessine une seconde maison en changeant uniquement la forme du toit.",
+          "quiz": "Quel ordre facilite la construction d’une maison ?",
+          "choices": [
+            "Grandes masses, ouvertures, détails",
+            "Tuiles, poignée, façade",
+            "Ombres, herbe, mur principal"
+          ],
+          "answer": 0,
+          "end": "Une maison de campagne a pris forme. Tu peux compléter la scène avec un arbre et un chemin.",
+          "owl": "Votre permis de construire a été accordé, malgré quelques fantaisies de toiture."
+        }
+      ]
+    },
+    {
+      "index": 7,
+      "name": "Le monde en paysages",
+      "subtitle": "Faire entrer l’horizon sur le papier.",
+      "motto": "Pas besoin de randonnée pour atteindre les sommets.",
+      "tag": "Le paysage",
+      "goal": "Construire un paysage lisible en plusieurs plans puis peindre un bord de lac.",
+      "materials": [
+        "Papier aquarelle",
+        "Feutres bleus et verts",
+        "Pinceau",
+        "Chiffon"
+      ],
+      "cover": "lake",
+      "completion": {
+        "title": "Un paysage complet",
+        "message": "Tu sais distinguer trois plans et peindre un lac avec ses reflets.",
+        "question": "Quel élément donne le plus d’atmosphère à ton paysage ?"
+      },
+      "lessons": [
+        {
+          "index": 13,
+          "week": 7,
+          "title": "Trois plans, un paysage",
+          "desc": "Du fond lointain aux herbes du premier plan.",
+          "minutes": 30,
+          "art": "hills",
+          "objective": "Composer un paysage en distinguant plusieurs niveaux de profondeur.",
+          "steps": [
+            [
+              "Dessine trois collines",
+              "Chacune recouvre légèrement celle située derrière."
+            ],
+            [
+              "Éloigne la plus lointaine",
+              "Une couleur claire et douce pour les formes du fond."
+            ],
+            [
+              "Renforce le milieu",
+              "Une teinte intermédiaire pour le deuxième plan."
+            ],
+            [
+              "Affirme le premier plan",
+              "Une couleur plus soutenue et quelques détails."
+            ]
+          ],
+          "tip": "Les montagnes du fond n’ont pas besoin de crier pour exister.",
+          "youtubeSearch": "aquarelle paysage trois plans profondeur débutant français",
+          "welcome": "Un paysage devient plus clair lorsqu’on sait ce qui est loin, au milieu et tout près. Aujourd’hui, tu vas créer trois plans successifs avec peu de formes.",
+          "watch": "Repère où la vidéo place l’horizon, puis les collines, montagnes et arbres. Ton exercice ajoutera une hiérarchie précise en trois couches.",
+          "anchor": "Choisis un ton pâle pour le lointain, une nuance moyenne au centre et une couleur plus soutenue devant.",
+          "help": "Si tout semble au même niveau, fonce légèrement le premier plan et simplifie le fond.",
+          "challenge": "Crée une seconde version en seulement trois couleurs.",
+          "quiz": "Quelle zone est généralement la plus contrastée dans un paysage simple ?",
+          "choices": [
+            "Le premier plan",
+            "Toujours le ciel",
+            "Le plan le plus éloigné"
+          ],
+          "answer": 0,
+          "end": "Tu sais organiser un paysage en trois profondeurs ; cette construction servira pour le lac de la prochaine séance.",
+          "owl": "J’ai rangé tes montagnes dans le bon ordre. Elles se chevauchent très poliment.",
+          "video": {
+            "id": "CetvtFUnARc",
+            "title": "Tutoriel dessin | Paysage facile pour débutants",
+            "creator": "TutoDessin How to Draw",
+            "focus": "Poser l’horizon, dessiner des collines ou montagnes et hiérarchiser les éléments.",
+            "fit": "Le cours ajoute une distinction explicite des trois plans et des valeurs.",
+            "url": "https://www.youtube.com/watch?v=CetvtFUnARc",
+            "embed": "https://www.youtube-nocookie.com/embed/CetvtFUnARc"
+          }
+        },
+        {
+          "index": 14,
+          "week": 7,
+          "title": "Le lac au petit matin",
+          "desc": "Un ciel calme, des collines et de l’eau qui réfléchit la lumière.",
+          "minutes": 35,
+          "art": "lake",
+          "objective": "Utiliser les acquis pour réaliser un paysage complet.",
+          "steps": [
+            [
+              "Pose l’horizon",
+              "Place une ligne d’eau et les collines en arrière-plan."
+            ],
+            [
+              "Peins le ciel",
+              "Un dégradé très doux, en laissant de la lumière."
+            ],
+            [
+              "Dessine l’eau",
+              "Quelques reflets horizontaux, sans surcharger."
+            ],
+            [
+              "Ajoute les herbes",
+              "De petites silhouettes au premier plan donnent de la vie."
+            ]
+          ],
+          "tip": "Pour les reflets, pense « petits traits horizontaux », pas « miroir de salle de bains ».",
+          "youtubeSearch": "paysage lac reflet aquarelle facile débutant français",
+          "welcome": "Tu vas maintenant peindre un lac au petit matin. Un ciel calme, quelques collines et des reflets horizontaux donneront à ton dessin une véritable atmosphère.",
+          "watch": "Cette vidéo utilise des Ink Brush et des aquarelles. Observe en particulier l’étape des reflets et la manière de conserver une composition simple.",
+          "anchor": "Les reflets suivent généralement une direction horizontale sur l’eau calme. Espace-les au lieu de tout remplir.",
+          "help": "Si l’eau paraît trop agitée, réduis le nombre de traits et laisse davantage de papier visible.",
+          "challenge": "Dessine deux versions de l’eau : très calme avec peu de traits, puis légèrement agitée.",
+          "quiz": "Pour suggérer un reflet sur une eau calme, quel geste convient le mieux ?",
+          "choices": [
+            "Des traits plutôt horizontaux",
+            "Des spirales très serrées",
+            "De grands traits verticaux uniquement"
+          ],
+          "answer": 0,
+          "end": "Tu viens de réaliser un paysage complet en utilisant les couleurs, les plans et les reflets.",
+          "owl": "Le lac est si tranquille que je pourrais y organiser une réunion. Je vais m’abstenir.",
+          "video": {
+            "id": "IKvH2q6vU1Y",
+            "title": "Tuto FACILE (débutant) : LAC d’Automne : REFLETS dans l’eau | AQUARELLE x Ink Brush",
+            "creator": "Emma - LinkArtStories",
+            "focus": "Construire un ciel, des arbres et les reflets d’un lac ; repères dans la description : reflets vers 02:52.",
+            "fit": "Très pertinent : combine aquarelle et Ink Brush. Adapter les couleurs à la boîte de feutres.",
+            "url": "https://www.youtube.com/watch?v=IKvH2q6vU1Y",
+            "embed": "https://www.youtube-nocookie.com/embed/IKvH2q6vU1Y"
+          }
+        }
+      ]
+    },
+    {
+      "index": 8,
+      "name": "La première œuvre",
+      "subtitle": "Créer un dessin vraiment personnel.",
+      "motto": "L’important n’est pas la patte ; c’est le regard.",
+      "tag": "L’autonomie",
+      "goal": "Choisir un sujet et mener un dessin à son terme en réutilisant les acquis.",
+      "materials": [
+        "Tout le matériel",
+        "Modèle ou photographie",
+        "Une belle feuille",
+        "Un peu de patience"
+      ],
+      "cover": "final",
+      "completion": {
+        "title": "Ton regard d’artiste",
+        "message": "Tu as choisi, préparé et réalisé une composition personnelle.",
+        "question": "Quel sujet aimerais-tu reprendre dans ton prochain carnet ?"
+      },
+      "lessons": [
+        {
+          "index": 15,
+          "week": 8,
+          "title": "Choisir son sujet",
+          "desc": "Une photo, un souvenir, un lieu : ce dessin sera le tien.",
+          "minutes": 30,
+          "art": "sketch",
+          "objective": "Imaginer une réalisation personnelle et préparer une composition.",
+          "steps": [
+            [
+              "Choisis un sujet",
+              "Un objet, une maison ou un paysage que tu aimes."
+            ],
+            [
+              "Observe sa silhouette",
+              "Cherche les formes importantes, pas les détails."
+            ],
+            [
+              "Fais deux mini-croquis",
+              "Deux petits essais rapides pour cadrer ta future œuvre."
+            ],
+            [
+              "Prépare tes couleurs",
+              "Garde une palette de quatre à six teintes."
+            ]
+          ],
+          "tip": "Le meilleur sujet, c’est souvent celui auquel tu as envie de revenir.",
+          "youtubeSearch": "composition croquis préparatoire paysage simplifier débutant",
+          "welcome": "Cette fois, personne ne choisit le sujet à ta place. Prends une photo, un objet ou un souvenir que tu aimerais transformer en dessin. Le but est de préparer une image qui te ressemble.",
+          "watch": "Regarde comment une photographie détaillée peut devenir un croquis plus simple. Ton objectif n’est pas de copier la démonstration, mais de sélectionner l’essentiel.",
+          "anchor": "Fais deux très petits croquis avant de commencer. Compare leur cadrage puis choisis celui qui raconte le mieux ton sujet.",
+          "help": "Si tu hésites, prends une photo avec trois grands ensembles faciles à identifier : ciel, sol, sujet principal.",
+          "challenge": "Essaie deux cadrages : l’un horizontal, l’autre vertical.",
+          "quiz": "Pourquoi réaliser deux petits croquis préparatoires ?",
+          "choices": [
+            "Pour comparer les compositions",
+            "Pour dépenser moins de papier uniquement",
+            "Pour éviter de regarder le sujet"
+          ],
+          "answer": 0,
+          "end": "Ton projet final est prêt : un sujet, un cadrage et une palette limitée.",
+          "owl": "La commission artistique approuve ton choix. La commission, c’est surtout toi.",
+          "video": {
+            "id": "7EKs9oiuYzg",
+            "title": "Comment simplifier un paysage pour le peindre",
+            "creator": "Méli Mélo Créations",
+            "focus": "Passer d’une photographie détaillée à un croquis lisible avec quelques masses.",
+            "fit": "Le but est de choisir son propre modèle, pas de reproduire l’exemple de la vidéo.",
+            "url": "https://www.youtube.com/watch?v=7EKs9oiuYzg",
+            "embed": "https://www.youtube-nocookie.com/embed/7EKs9oiuYzg"
+          }
+        },
+        {
+          "index": 16,
+          "week": 8,
+          "title": "Ton premier tableau",
+          "desc": "Une œuvre entière, sans recette imposée et sans jury à impressionner.",
+          "minutes": 40,
+          "art": "final",
+          "objective": "Dessiner et colorer une image personnelle en autonomie.",
+          "steps": [
+            [
+              "Reprends ton esquisse",
+              "Reporte les grandes formes sur une belle feuille."
+            ],
+            [
+              "Commence par les tons clairs",
+              "Garde les parties lumineuses et travaille progressivement."
+            ],
+            [
+              "Ajoute les détails après séchage",
+              "Quelques accents foncés suffisent."
+            ],
+            [
+              "Date et signe ton œuvre",
+              "Photographie-la pour la garder dans ton carnet d’artiste."
+            ]
+          ],
+          "tip": "Si tu as envie d’en faire une deuxième, c’est gagné. Le reste est accessoire.",
+          "youtubeSearch": "faire premier paysage aquarelle débutant complet français",
+          "welcome": "Voici ta première œuvre personnelle. Tu vas reprendre ton croquis, choisir l’ordre des couleurs et terminer un dessin sans suivre chaque geste d’un tutoriel. Tu as maintenant tout ce qu’il faut pour essayer.",
+          "watch": "La vidéo n’est qu’une source d’inspiration. Tu peux la regarder pour retrouver l’idée des grandes masses et des contrastes, puis dessiner ton propre sujet.",
+          "anchor": "Travaille du plus simple au plus détaillé et des teintes légères vers les accents sombres. Arrête-toi lorsque l’image dit déjà ce que tu voulais montrer.",
+          "help": "Si tu bloques, reviens à trois questions : quelle est la plus grande forme ? Où se trouve la lumière ? Quel détail est vraiment nécessaire ?",
+          "challenge": "Reprends le même sujet dans un mois ; compare les deux versions sans noter laquelle serait « meilleure ».",
+          "quiz": "Pour ton projet final, quel objectif compte le plus ?",
+          "choices": [
+            "Faire tes propres choix artistiques",
+            "Reproduire chaque geste d’une vidéo",
+            "Utiliser toutes les couleurs de la boîte"
+          ],
+          "answer": 0,
+          "end": "Ton tableau est terminé. Signe-le, photographie-le et ajoute-le à ton carnet. Ce n’est pas la fin du dessin ; c’est le début de ta manière de regarder.",
+          "owl": "Rapport final : l’ours sait désormais tenir un atelier. Je propose de renouveler son mandat.",
+          "video": {
+            "id": "Mg0k4e0sCJU",
+            "title": "Aquarelle débutant : Peindre un paysage simple",
+            "creator": "Sissil Vehr Aquarelle",
+            "focus": "Démonstration d’un paysage simple sans esquisse, utile comme inspiration pour travailler librement.",
+            "fit": "Vidéo de référence facultative : l’œuvre finale doit être personnelle.",
+            "url": "https://www.youtube.com/watch?v=Mg0k4e0sCJU",
+            "embed": "https://www.youtube-nocookie.com/embed/Mg0k4e0sCJU"
+          }
+        }
+      ]
+    }
+  ],
+  "bonusVideos": [
+    {
+      "id": "r62PFZAoftQ",
+      "title": "comment dessiner un ours étape par étape facilement",
+      "creator": "Comment Dessiner",
+      "module": "Bonus Papa Ours : construction animale en grandes masses",
+      "url": "https://www.youtube.com/watch?v=r62PFZAoftQ",
+      "embed": "https://www.youtube-nocookie.com/embed/r62PFZAoftQ"
+    },
+    {
+      "id": "LlqcuNvXO40",
+      "title": "Comment dessiner une chouette facilement étape par étape",
+      "creator": "Nizar Hassouni",
+      "module": "Bonus Maman Chouette : tête, yeux, ailes et silhouette",
+      "url": "https://www.youtube.com/watch?v=LlqcuNvXO40",
+      "embed": "https://www.youtube-nocookie.com/embed/LlqcuNvXO40"
+    }
+  ],
+  "extraVideos": [
+    {
+      "id": "dgdnFEZRiOw",
+      "title": "Comment peindre le ciel en aquarelle [Niveau FACILE]",
+      "creator": "peinture aquarelle facile",
+      "module": "Ressource complémentaire sur plusieurs types de ciels",
+      "url": "https://www.youtube.com/watch?v=dgdnFEZRiOw",
+      "embed": "https://www.youtube-nocookie.com/embed/dgdnFEZRiOw"
+    }
+  ],
+  "weeklyEmails": [
+    {
+      "week": 1,
+      "subject": "Le premier coup de feutre",
+      "body": "Bonjour Papa Ours,\n\nTon atelier ouvre ses portes. Cette semaine, tu vas faire connaissance avec tes feutres aquarellables, puis peindre un premier coucher de soleil. Prépare une feuille, un peu d’eau et un chiffon. Rien de plus.\n\nMaman Chouette tient à rappeler qu’un nuancier est une activité artistique parfaitement respectable.\n\nQuand tu en as envie, ouvre ton premier cours. À ton rythme."
+    },
+    {
+      "week": 2,
+      "subject": "L’art de regarder une tasse",
+      "body": "Bonjour Papa Ours,\n\nDeuxième escale : les formes cachées dans les objets. Une tasse, un livre ou un fruit suffisent pour découvrir comment construire un dessin.\n\nCette semaine, ne cherche pas la vitesse. Regarde, pose quelques lignes, puis ajuste.\n\nMaman Chouette a déjà inspecté plusieurs tasses. Aucune n’a protesté."
+    },
+    {
+      "week": 3,
+      "subject": "La lumière entre en scène",
+      "body": "Bonjour Papa Ours,\n\nCette semaine, une lampe et une pomme vont t’apprendre à donner du volume à tes dessins. Tu découvriras comment distinguer les zones claires, les ombres sur l’objet et celles qui apparaissent sur la table.\n\nTu peux recommencer le même exercice autant de fois que tu veux. On apprend souvent beaucoup d’un second essai."
+    },
+    {
+      "week": 4,
+      "subject": "Promenade botanique",
+      "body": "Bonjour Papa Ours,\n\nL’atelier prend l’air. Tu vas dessiner quelques feuilles, une fleur et une petite planche botanique. Si tu trouves un modèle dans le jardin ou pendant une promenade, c’est encore mieux.\n\nMaman Chouette précise qu’une feuille tordue reste un excellent modèle."
+    },
+    {
+      "week": 5,
+      "subject": "La garde-robe des arbres",
+      "body": "Bonjour Papa Ours,\n\nCette semaine, tu exploreras les mélanges, puis tu habilleras un arbre aux couleurs de l’automne. C’est le bon moment pour ressortir les essais de ton premier nuancier.\n\nTu as déjà franchi la moitié du parcours, mais rien ne t’oblige à avancer vite. L’atelier reste ouvert aussi longtemps que tu le souhaites."
+    },
+    {
+      "week": 6,
+      "subject": "La maison dans les bois",
+      "body": "Bonjour Papa Ours,\n\nPlace à l’architecture de campagne. Tu vas découvrir comment faire reculer un chemin et dessiner une maison avec très peu de formes.\n\nLe plan a été déposé auprès du ministère des Ours ; les toits légèrement inclinés sont autorisés."
+    },
+    {
+      "week": 7,
+      "subject": "Le lac du petit matin",
+      "body": "Bonjour Papa Ours,\n\nCette semaine, tu vas peindre un paysage composé de plusieurs plans, puis un lac avec quelques reflets. Tu verras qu’un petit nombre de traits bien choisis suffit souvent à évoquer l’eau.\n\nSi tu veux, photographie ton paysage terminé et demande un conseil à Maman Chouette."
+    },
+    {
+      "week": 8,
+      "subject": "Le tableau de l’Ours",
+      "body": "Bonjour Papa Ours,\n\nVoici la dernière semaine du parcours guidé. Cette fois, c’est toi qui décides : un paysage, une maison, un objet ou un souvenir. Tu vas préparer ton dessin puis le mener à son terme.\n\nÀ la fin, tu pourras réunir tes créations dans ton carnet. Maman Chouette a préparé un rapport final extrêmement sérieux. Ou presque."
+    }
+  ]
+}

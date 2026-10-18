@@ -1,0 +1,47 @@
+{
+  "name": "atelier-de-lours",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test --test-concurrency=1 tests/*.test.ts",
+    "test:e2e": "playwright test",
+    "test:server": "tsx scripts/test-server.ts",
+    "migrate": "tsx scripts/migrate.ts",
+    "assets": "tsx scripts/assets.ts",
+    "verify:videos": "tsx scripts/verify-videos.ts"
+  },
+  "dependencies": {
+    "@fontsource-variable/fraunces": "^5.2.10",
+    "@fontsource/dm-sans": "^5.2.8",
+    "@netlify/blobs": "^10.0.0",
+    "@netlify/functions": "^5.0.0",
+    "jspdf": "^4.0.0",
+    "nodemailer": "^10.1.7",
+    "pg": "^8.16.3",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "sharp": "^0.35.5"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "^0.3.14",
+    "@playwright/test": "^1.56.0",
+    "@types/node": "^24.9.0",
+    "@types/nodemailer": "^7.0.2",
+    "@types/pg": "^8.15.5",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@vitejs/plugin-react": "^5.0.4",
+    "netlify-cli": "^27.13.0",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3",
+    "vite": "^7.1.10"
+  }
+}
