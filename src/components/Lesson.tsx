@@ -86,6 +86,7 @@ export function LessonPage({ id }: { id: number }) {
             <button
               ref={chatTrigger}
               className="lesson-chat-trigger"
+              aria-label="Demander à Maman Chouette"
               aria-expanded={chatOpen}
               aria-haspopup="dialog"
               onClick={() => setChatOpen(true)}
