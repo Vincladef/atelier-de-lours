@@ -139,7 +139,7 @@ export function Provider({ children }: { children: ReactNode }) {
         "Enregistre d’abord tes modifications avec « Réessayer ».",
       );
     await api("/auth/logout", "POST", {});
-    setData(null);
+    await refresh();
   }
   function save(path: string, patch: unknown) {
     pending.current++;

@@ -151,7 +151,24 @@ export async function handle(req: Request, s: Services): Promise<Response> {
         "Set-Cookie": sessionCookie(session, url.protocol === "https:"),
       });
     }
-    const u = await authenticate(req, s.db);
+    // The shared learner workshop opens directly; owner operations still require a session.
+    let u: User;
+    try {
+      u = await authenticate(req, s.db);
+    } catch (e) {
+      if (!(e instanceof HttpError) || e.status !== 401 || path.startsWith("/admin/"))
+        throw e;
+      const email = normalizeEmail(s.env.PAPA_EMAIL);
+      if (!email || email === normalizeEmail(s.env.EMAIL_FROM))
+        throw new HttpError(503, "L’atelier n’est pas encore configuré.");
+      const result = await s.db.query<User>(
+        "INSERT INTO atelier_users(email,role) VALUES ($1,'learner') ON CONFLICT(email) DO UPDATE SET email=excluded.email RETURNING *",
+        [email],
+      );
+      u = result.rows[0];
+      if (u.role !== "learner")
+        throw new HttpError(503, "L’atelier n’est pas encore configuré.");
+    }
     if (path === "/auth/logout" && method === "POST") {
       const raw =
         /atelier_session=([\w-]+)/.exec(req.headers.get("cookie") || "")?.[1] ||

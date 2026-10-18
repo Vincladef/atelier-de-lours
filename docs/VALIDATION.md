@@ -13,7 +13,7 @@
 
 ## Contrôle final de production
 
-- Site vérifié directement en HTTPS dans Chromium sur ordinateur, tablette et téléphone : réponse 200, images chargées, aucun débordement horizontal, aucune erreur JavaScript ou de console de l’application. Le 401 de `/api/state` avant connexion est attendu.
+- Site vérifié directement en HTTPS dans Chromium sur ordinateur, tablette et téléphone : réponse 200, images chargées, aucun débordement horizontal, aucune erreur JavaScript ou de console de l’application. Ce contrôle initial précédait la suppression de l’écran de connexion ; `/api/state` retourne désormais 200 sans cookie.
 - Le certificat public du proxy de l’environnement est approuvé uniquement dans un profil Chromium isolé et pour le domaine de l’application ; la vérification TLS reste active.
 - L’ancien import Google Fonts a été supprimé : les polices sont servies localement. La barre et le badge Netlify ont été désactivés via les paramètres du projet, sans changement de formule.
 - Réinstallation propre avec `npm ci`, compilation et connexion/écriture/relecture à travers le proxy Vite vérifiées.
@@ -52,3 +52,9 @@ Les contrôles réels ont utilisé une fonction temporaire protégée par un jet
 - Les vidéos externes peuvent changer de disponibilité après la vérification. Le lien YouTube et les consignes de pratique sont toujours proposés.
 - Les erreurs SMTP dont l’acceptation est incertaine demandent une vérification du propriétaire plutôt qu’un renvoi automatique pouvant doubler un message.
 - L’accès du père et les notifications ne sont pas activés par ces tests. Leur activation reste une action explicite du propriétaire, au moment d’offrir le cadeau.
+
+## Accès direct demandé par le propriétaire — 18 octobre 2026
+
+L’atelier de Papa s’ouvre sans écran de connexion. Tous les visiteurs partagent le même compte apprenant, y compris ses photographies ; le stockage Blobs reste accessible uniquement via l’API. Le compte propriétaire conserve sa connexion par email et son carnet distinct. Les endpoints d’administration exigent toujours une session propriétaire. Le réglage `gift_activated` et les protections SMTP n’ont pas été activés ni contournés. L’ouverture et la sauvegarde sans cookie, la lecture des dessins partagés, les sessions expirées et le refus de l’administration sans session sont couverts par les tests API.
+
+Vérification de cette modification : compilation Netlify réussie, 28 tests API et 18 scénarios navigateur réussis sur les trois formats. Les tests navigateur utilisent désormais l’ouverture directe pour les parcours pédagogiques et réservent la connexion au contrôle de l’administration.

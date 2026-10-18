@@ -45,9 +45,21 @@ test("migration is repeatable and never seeds demo data", async () => {
     false,
   );
 });
-test("anonymous private endpoints reject access", async () => {
-  for (const path of ["/state", "/admin/status", "/artworks/123/image"])
-    assert.equal((await f.request(path)).status, 401);
+test("shared workshop opens at zero without login, while admin requires a session", async () => {
+  const state = await (await f.request("/state")).json();
+  assert.equal(state.user.role, "learner");
+  assert.deepEqual(state.progress, {});
+  assert.deepEqual(state.artworks, []);
+  assert.equal(f.mails.length, 0);
+  for (const [path, method, data] of [["/admin/status", "GET", undefined], ["/admin/activation", "POST", {confirmation: "ACTIVER LES ENVOIS À PAPA"}], ["/admin/test-email", "POST", {week: 1}] ] as const)
+    assert.equal((await f.request(path, method, data)).status, 401);
+  assert.equal((await f.request("/lessons/1", "PATCH", { notes: "Sans connexion" })).status, 200);
+  assert.equal((await (await f.request("/state", "GET", undefined, {cookie: "atelier_session=" + "x".repeat(43)})).json()).progress[1].notes, "Sans connexion");
+  const uploaded = await upload();
+  const artwork = (await uploaded.json()).artwork;
+  assert.equal((await f.request(`/artworks/${artwork.id}/image`)).status, 200);
+  assert.equal((await f.s.db.query("SELECT enabled FROM atelier_settings WHERE key='gift_activated'")).rows[0].enabled, false);
+  assert.equal(f.mails.length, 0);
 });
 test("gift gate prevents all learner email including login", async () => {
   const r = await f.request("/auth/request", "POST", {
@@ -211,7 +223,7 @@ test("photos are normalized to JPEG, persisted and private", async () => {
         cookie: "",
       })
     ).status,
-    401,
+    404,
   );
   assert.equal(f.blobs.size, 1);
 });
@@ -422,7 +434,8 @@ test("login attempts are rate limited without sending extra mail", async () => {
 test("logout revokes the server-side session", async () => {
   await f.login();
   assert.equal((await f.request("/auth/logout", "POST", {})).status, 200);
-  assert.equal((await f.request("/state")).status, 401);
+  assert.equal((await (await f.request("/state")).json()).user.role, "learner");
+  assert.equal((await f.request("/admin/status")).status, 401);
 });
 test("vision requests contain a normalized JPEG only with declared image capability (mock DeepSeek)", async () => {
   await f.login();

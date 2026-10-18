@@ -1,6 +1,6 @@
 # L’Atelier de l’Ours
 
-Application privée de dessin pour un débutant adulte. La référence visuelle est `docs/reference/maquette.html`. Garder les quatre rubriques, le papier, les couleurs, les typographies et les photographies réalistes. Le compte du père commence vide ; aucune donnée de la maquette ne doit être importée.
+Application personnelle de dessin pour un débutant adulte. La référence visuelle est `docs/reference/maquette.html`. Garder les quatre rubriques, le papier, les couleurs, les typographies et les photographies réalistes. Le compte du père commence vide ; aucune donnée de la maquette ne doit être importée.
 
 ## Développement
 
@@ -19,7 +19,7 @@ Application privée de dessin pour un débutant adulte. La référence visuelle 
 - Ne jamais afficher les secrets, extraire des jetons du proxy, les mettre dans Git, le frontend, les journaux ou une réponse HTTP.
 - Ne jamais envoyer un email réel à `PAPA_EMAIL` pendant le développement ou les tests. Tests réels exclusivement à `EMAIL_FROM`.
 - Ne jamais activer `gift_activated` sans une instruction explicite du propriétaire. Ne pas désactiver le garde-fou pour tester.
-- Les photos sont privées dans Netlify Blobs. Toute lecture nécessite une session et une vérification de propriétaire en base.
+- À la demande du propriétaire, l’atelier de Papa est accessible sans connexion : les visiteurs partagent son carnet et sa progression. Les Blobs restent privés et passent par l’API. Les données du compte propriétaire et les fonctions d’administration nécessitent toujours sa session.
 - Ne transmettre une photo à DeepSeek que sur demande explicite d’analyse avec consentement.
 - Ajouter une migration SQL versionnée ; ne pas modifier une migration déjà appliquée. Ne pas réinitialiser les données pour résoudre un problème de configuration.
 - Aucun endpoint de vérification temporaire ne doit rester dans le déploiement final. Ne jamais publier de session ou de lien de connexion.

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { weeklyEmails } from "../lib/curriculum";
 import { api } from "../lib/api";
 import { useStore } from "../lib/store";
-import { Credits, ErrorMessage, Modal } from "./Common";
+import { Credits, ErrorMessage, Modal, go } from "./Common";
 export function Settings({ close }: { close: () => void }) {
   const s = useStore();
   const user = s.data!.user;
@@ -220,6 +220,7 @@ export function Settings({ close }: { close: () => void }) {
         <Credits />
         <ErrorMessage message={error} />
         <div className="divider" />
+        {user.role === "owner" ? (
         <button
           className="textbutton"
           onClick={async () => {
@@ -231,8 +232,16 @@ export function Settings({ close }: { close: () => void }) {
             }
           }}
         >
-          Me déconnecter
+          Quitter l’administration
         </button>
+        ) : (
+          <button className="textbutton" onClick={() => {
+            close();
+            go("connexion");
+          }}>
+            Accès propriétaire
+          </button>
+        )}
       </div>
     </Modal>
   );

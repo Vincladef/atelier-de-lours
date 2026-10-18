@@ -49,7 +49,16 @@ export function App() {
         Ouverture de l’atelier…
       </div>
     );
-  else if (!s.data) content = <Login error={loginError || s.authError} />;
+  else if (root.split("?")[0] === "connexion") content = <Login error={loginError} />;
+  else if (!s.data)
+    content = (
+      <div className="loading">
+        <ErrorMessage message={s.authError || "L’atelier ne peut pas s’ouvrir pour le moment."} />
+        <button className="button primary" onClick={() => void s.refresh()}>
+          Réessayer
+        </button>
+      </div>
+    );
   else if (
     root === "cours" &&
     param &&
@@ -179,9 +188,9 @@ function Login({ error }: { error: string }) {
     <div className="hero login-hero">
       <div className="hero-copy">
         <span className="p-eyebrow">Un atelier pour toi</span>
-        <h1 className="title">Le dessin, ça se prend à la patte.</h1>
+        <h1 className="title">Accès propriétaire</h1>
         <p className="deck">
-          Entre ton adresse email pour recevoir ton lien de connexion.
+          Entre l’adresse du propriétaire pour administrer le cadeau.
         </p>
         <form
           onSubmit={async (e) => {

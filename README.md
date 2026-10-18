@@ -1,6 +1,6 @@
 # L’Atelier de l’Ours
 
-Une formation privée de dessin : huit semaines, seize séances, un carnet photographique et Maman Chouette. L’application reprend la maquette fournie dans `docs/reference/maquette.html`.
+Une formation personnelle de dessin : huit semaines, seize séances, un carnet photographique et Maman Chouette. L’application reprend la maquette fournie dans `docs/reference/maquette.html`.
 
 - Site : https://atelier-de-lours.netlify.app
 - Dépôt : https://github.com/Vincladef/atelier-de-lours
@@ -56,13 +56,13 @@ Les cinq variables ci-dessous existent déjà dans Netlify. Aucun nom préfixé 
 
 `EMAIL_FROM` et `PAPA_EMAIL` doivent être deux adresses distinctes : en cas de conflit, aucun lien n’est envoyé. Les sessions utilisent un cookie HttpOnly, Secure en HTTPS, SameSite=Lax ; les jetons ne sont conservés en base que sous forme d’empreinte. Les mutations contrôlent l’origine. Aucun mot de passe de compte ni interface d’inscription publique.
 
-Les métadonnées des dessins sont dans Neon ; les JPEG normalisés, sans métadonnées EXIF, dans un store Netlify Blobs privé. L’API contrôle le compte propriétaire avant toute lecture. Le navigateur réduit les images, puis le serveur vérifie leur contenu, les dimensions et le poids. L’export PDF est produit à la demande sur l’appareil connecté.
+Les métadonnées des dessins sont dans Neon ; les JPEG normalisés, sans métadonnées EXIF, dans un store Netlify Blobs privé. L’API conserve la séparation entre le compte partagé de Papa et le compte propriétaire, accessible uniquement avec sa session. Le navigateur réduit les images, puis le serveur vérifie leur contenu, les dimensions et le poids. L’export PDF est produit à la demande sur l’appareil connecté.
 
 ## Anniversaire et emails
 
-**Le cadeau reste fermé tant que le propriétaire ne l’active pas.** Le réglage `gift_activated` est créé à `false`. La fonction programmée et le transport SMTP vérifient ce réglage ; les liens de connexion à Papa sont également bloqués jusque-là. Les tests réels ne peuvent cibler que l’adresse du propriétaire.
+**Les envois à Papa restent désactivés tant que le propriétaire ne les active pas.** Le réglage `gift_activated` est créé à `false`. La fonction programmée et le transport SMTP vérifient ce réglage ; les liens de connexion à Papa sont également bloqués jusque-là. Les tests réels ne peuvent cibler que l’adresse du propriétaire.
 
-Le propriétaire se connecte avec `EMAIL_FROM`. Son carnet est séparé de celui du père. Pour offrir le cadeau, il peut ouvrir Préférences → Administration du cadeau, puis confirmer explicitement `ACTIVER LES ENVOIS À PAPA`. Cette activation n’est effectuée ni par le build ni par les tests réels. Papa choisit ensuite s’il souhaite recevoir le courrier et les rappels. Il peut les désactiver dans ses préférences.
+L’atelier s’ouvre directement sans connexion, à la demande du propriétaire. Tous les visiteurs du lien partagent le carnet, les photos et la progression de Papa ; aucune donnée fictive n’est ajoutée. Les limites IA restent actives. Le propriétaire se connecte via Préférences → Accès propriétaire avec `EMAIL_FROM`. Son carnet est séparé de celui du père. Pour offrir le cadeau, il peut ouvrir Préférences → Administration du cadeau, puis confirmer explicitement `ACTIVER LES ENVOIS À PAPA`. Cette activation n’est effectuée ni par le build ni par les tests réels. Papa choisit ensuite s’il souhaite recevoir le courrier et les rappels. Il peut les désactiver dans ses préférences.
 
 La file SQL utilise une clé unique pour chaque courrier. Les rejets SMTP temporaires explicites sont repris au plus trois fois. Une déconnexion ou un timeout après un envoi potentiellement accepté devient `uncertain`, sans renvoi automatique : cela évite de doubler un message. Le calendrier ne passe pas à une semaine dont les précédentes n’ont pas été terminées. Les rappels sont facultatifs.
 

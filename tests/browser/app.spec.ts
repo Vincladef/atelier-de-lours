@@ -2,7 +2,7 @@ import { test, expect, type Page } from "@playwright/test";
 import sharp from "sharp";
 async function login(page: Page) {
   await page.request.post("/__test/reset");
-  await page.goto("/");
+  await page.goto("/#connexion");
   await page.getByLabel("Ton adresse email").fill("owner@example.test");
   await page.getByRole("button", { name: "Recevoir mon lien" }).click();
   await expect(
@@ -34,7 +34,10 @@ async function noOverflow(page: Page) {
   ).toBe(true);
 }
 test.beforeEach(async ({ page }) => {
-  await login(page);
+  await page.request.post("/__test/reset");
+  await page.goto("/");
+  await expect(page.getByRole("button", { name: "Reprendre mon cours" })).toBeVisible();
+  await expect(page.getByLabel("Ton adresse email")).toHaveCount(0);
 });
 
 test("four sections, zero progress, all weeks and 16 lessons", async ({
@@ -285,6 +288,7 @@ test("owl questions and explicit image consent; no fake analysis", async ({
 test("settings are keyboard accessible and gift stays disabled", async ({
   page,
 }, info) => {
+  await login(page);
   await page.getByRole("button", { name: "Préférences", exact: true }).click();
   const dialog = page.getByRole("dialog");
   await expect(dialog).toBeVisible();
@@ -317,7 +321,8 @@ test("settings are keyboard accessible and gift stays disabled", async ({
       exact: true,
     }),
   ).toHaveAttribute("aria-pressed", "true");
-  await page.getByRole("button", { name: "Me déconnecter" }).click();
-  await expect(page.getByLabel("Ton adresse email")).toBeVisible();
+  await page.getByRole("button", { name: "Quitter l’administration" }).click();
+  await expect(page.getByRole("button", { name: "Reprendre mon cours" })).toBeVisible();
+  await expect(page.getByLabel("Ton adresse email")).toHaveCount(0);
   await noOverflow(page);
 });
