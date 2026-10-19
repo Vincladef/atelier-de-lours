@@ -110,7 +110,7 @@ export function Settings({ close }: { close: () => void }) {
                             week: preview,
                           });
                           s.notify(
-                            "Email de test envoyé au propriétaire uniquement.",
+                            "Email de test envoyé à l’adresse de préparation.",
                           );
                         } catch (e) {
                           setError((e as Error).message);
@@ -221,6 +221,7 @@ export function Settings({ close }: { close: () => void }) {
                               },
                             );
                             setConfirmation("");
+                            await s.refresh();
                             await load();
                             s.notify(
                               result.already_sent

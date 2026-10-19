@@ -685,6 +685,12 @@ test("direct formation controls reset the course and explicitly send only one in
   await expect(
     page.getByText("L’invitation a déjà été envoyée pour ce parcours."),
   ).toBeVisible();
+  await expect(
+    page.getByRole("button", {
+      name: "Recevoir le courrier de l’Ours",
+      exact: true,
+    }),
+  ).toHaveAttribute("aria-pressed", "true");
   const inbox = await (await page.request.get("/__test/inbox")).json();
   expect(inbox.filter((m: any) => m.to === "papa@example.test")).toHaveLength(
     1,
