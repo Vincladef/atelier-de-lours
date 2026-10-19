@@ -11,8 +11,10 @@ export function Settings({ close }: { close: () => void }) {
     [error, setError] = useState(""),
     [busy, setBusy] = useState(false),
     [preview, setPreview] = useState(0),
-    [activation, setActivation] = useState(false),
-    [confirmation, setConfirmation] = useState("");
+    [confirmation, setConfirmation] = useState(""),
+    [resetConfirmation, setResetConfirmation] = useState(""),
+    [eraseNotebook, setEraseNotebook] = useState(false),
+    [inviteNotifications, setInviteNotifications] = useState(true);
   async function load() {
     if (user.role === "owner")
       try {
@@ -145,12 +147,13 @@ export function Settings({ close }: { close: () => void }) {
                   Ton compte propriétaire possède son propre carnet. Les essais
                   ne remplissent pas celui de Papa.
                 </p>
-                {status.gift_activated ? (
+                {status.gift_activated && (
                   <button
-                    className="button ghost"
+                    className="textbutton"
                     disabled={busy}
                     onClick={async () => {
                       setBusy(true);
+                      setError("");
                       try {
                         await api("/admin/pause", "POST", {});
                         await load();
@@ -163,26 +166,150 @@ export function Settings({ close }: { close: () => void }) {
                   >
                     Suspendre les envois à Papa
                   </button>
-                ) : (
-                  <button
-                    className="button ghost"
-                    onClick={() => setActivation(true)}
-                  >
-                    Préparer l’ouverture du cadeau
-                  </button>
                 )}
-                {activation && !status.gift_activated && (
+                <details className="dropdown">
+                  <summary>Inviter Papa à commencer</summary>
+                  {status.invitation?.status === "sent" ? (
+                    <>
+                      <p role="status">
+                        L’invitation a déjà été envoyée pour ce parcours.
+                      </p>
+                      {!status.gift_activated && (
+                        <button
+                          className="button ghost"
+                          disabled={busy}
+                          onClick={async () => {
+                            setBusy(true);
+                            setError("");
+                            try {
+                              await api("/admin/activation", "POST", {
+                                confirmation: "ACTIVER LES ENVOIS À PAPA",
+                              });
+                              await load();
+                            } catch (e) {
+                              setError((e as Error).message);
+                            } finally {
+                              setBusy(false);
+                            }
+                          }}
+                        >
+                          Réautoriser les courriers de formation
+                        </button>
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      <p>
+                        Ce premier email sera envoyé immédiatement à Papa, avec
+                        un bouton vers l’atelier. Cette action ouvre les envois
+                        pour le cadeau.
+                      </p>
+                      <iframe
+                        title="Aperçu de l’invitation"
+                        className="mail-preview-frame"
+                        sandbox=""
+                        srcDoc={mailContent("welcome", 1).html}
+                      />
+                      <form
+                        className="stack"
+                        onSubmit={async (e) => {
+                          e.preventDefault();
+                          setBusy(true);
+                          setError("");
+                          try {
+                            const result = await api<{ already_sent: boolean }>(
+                              "/admin/invite",
+                              "POST",
+                              {
+                                confirmation,
+                                notifications: inviteNotifications,
+                              },
+                            );
+                            setConfirmation("");
+                            await load();
+                            s.notify(
+                              result.already_sent
+                                ? "L’invitation était déjà envoyée."
+                                : "Invitation envoyée à Papa.",
+                            );
+                          } catch (e) {
+                            setError((e as Error).message);
+                            await load();
+                          } finally {
+                            setBusy(false);
+                          }
+                        }}
+                      >
+                        <label className="consent">
+                          <input
+                            type="checkbox"
+                            checked={inviteNotifications}
+                            onChange={(e) =>
+                              setInviteNotifications(e.target.checked)
+                            }
+                            disabled={busy}
+                          />
+                          Activer ensuite les courriers de formation. Papa
+                          pourra les désactiver dans ses préférences.
+                        </label>
+                        <label>
+                          Écris « INVITER PAPA » pour confirmer l’envoi
+                          <input
+                            className="simple-input"
+                            value={confirmation}
+                            onChange={(e) => setConfirmation(e.target.value)}
+                            autoComplete="off"
+                          />
+                        </label>
+                        {status.invitation &&
+                          ["sending", "uncertain"].includes(
+                            status.invitation.status,
+                          ) && (
+                            <p role="status">
+                              L’envoi est en cours ou non confirmé. Aucun nouvel
+                              envoi n’est autorisé pour éviter un doublon.
+                            </p>
+                          )}
+                        <button
+                          className="button primary"
+                          disabled={
+                            busy ||
+                            confirmation !== "INVITER PAPA" ||
+                            (status.invitation &&
+                              ["sending", "uncertain"].includes(
+                                status.invitation.status,
+                              ))
+                          }
+                        >
+                          Envoyer l’invitation à Papa
+                        </button>
+                      </form>
+                    </>
+                  )}
+                </details>
+                <details className="dropdown">
+                  <summary>Recommencer la formation de Papa</summary>
+                  <p>
+                    Remet la progression à 0 % et efface les notes de cours, les
+                    bilans et les conversations avec Maman Chouette. Les envois
+                    sont suspendus. Le carnet est conservé par défaut. Une
+                    nouvelle invitation pourra ensuite être envoyée.
+                  </p>
                   <form
-                    className="stack activation"
+                    className="stack"
                     onSubmit={async (e) => {
                       e.preventDefault();
                       setBusy(true);
+                      setError("");
                       try {
-                        await api("/admin/activation", "POST", {
-                          confirmation,
+                        await api("/admin/reset", "POST", {
+                          confirmation: resetConfirmation,
+                          erase_notebook: eraseNotebook,
                         });
+                        setResetConfirmation("");
+                        setEraseNotebook(false);
                         await load();
-                        setActivation(false);
+                        s.notify("La formation de Papa est remise à zéro.");
                       } catch (e) {
                         setError((e as Error).message);
                       } finally {
@@ -190,37 +317,33 @@ export function Settings({ close }: { close: () => void }) {
                       }
                     }}
                   >
-                    <p>
-                      Cette action autorise les liens de connexion à Papa et les
-                      courriers auxquels il s’abonne. Elle ne doit être faite
-                      que lorsque le cadeau peut être découvert.
-                    </p>
+                    <label className="consent">
+                      <input
+                        type="checkbox"
+                        checked={eraseNotebook}
+                        onChange={(e) => setEraseNotebook(e.target.checked)}
+                        disabled={busy}
+                      />
+                      Supprimer aussi les dessins et les photographies du
+                      carnet. Cette suppression est définitive.
+                    </label>
                     <label>
-                      Écris « ACTIVER LES ENVOIS À PAPA »
+                      Écris « RECOMMENCER » pour confirmer
                       <input
                         className="simple-input"
-                        value={confirmation}
-                        onChange={(e) => setConfirmation(e.target.value)}
+                        value={resetConfirmation}
+                        onChange={(e) => setResetConfirmation(e.target.value)}
                         autoComplete="off"
                       />
                     </label>
                     <button
-                      className="button primary"
-                      disabled={
-                        busy || confirmation !== "ACTIVER LES ENVOIS À PAPA"
-                      }
+                      className="button ghost"
+                      disabled={busy || resetConfirmation !== "RECOMMENCER"}
                     >
-                      Ouvrir le cadeau et autoriser les envois
-                    </button>
-                    <button
-                      type="button"
-                      className="button plain"
-                      onClick={() => setActivation(false)}
-                    >
-                      Annuler
+                      Réinitialiser la formation de Papa
                     </button>
                   </form>
-                )}
+                </details>
               </>
             ) : (
               <p role="status">Vérification de la configuration…</p>

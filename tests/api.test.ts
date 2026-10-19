@@ -798,7 +798,7 @@ test("stale weekly mail is cancelled after progress advances rather than describ
     reminders: false,
   });
   await f.s.db.query(
-    "UPDATE atelier_users SET created_at=now()-interval '8 days' WHERE id=$1",
+    "UPDATE atelier_users SET training_started_at=now()-interval '8 days' WHERE id=$1",
     [user.id],
   );
   await f.s.db.query(
@@ -812,4 +812,276 @@ test("stale weekly mail is cancelled after progress advances rather than describ
   ).rows[0];
   assert.equal(row.status, "cancelled");
   assert.ok(f.mails.every((m) => m.text.includes("/#cours/3")));
+});
+
+test("reset and invitation require an owner session and exact confirmation", async () => {
+  for (const path of ["/admin/reset", "/admin/invite"])
+    assert.equal((await f.request(path, "POST", {})).status, 401);
+  await f.request("/state");
+  await f.login();
+  for (const path of ["/admin/reset", "/admin/invite"])
+    assert.equal(
+      (await f.request(path, "POST", { confirmation: "yes" })).status,
+      400,
+    );
+  assert.equal(f.mails.filter((m) => m.to === "papa@example.test").length, 0);
+});
+
+test("reset clears only Papa's training, preserves his drawings by default and starts a fresh mail cycle", async () => {
+  await f.request("/lessons/1", "PATCH", {
+    completed: true,
+    notes: "Avant reset",
+  });
+  const artwork = (await (await upload()).json()).artwork;
+  const learner = (
+    await f.s.db.query("SELECT * FROM atelier_users WHERE role='learner'")
+  ).rows[0];
+  await enqueue(f.s, learner.id, "weekly", 1);
+  await f.request("/chat", "POST", { lesson_id: 1, question: "Un conseil ?" });
+  await f.login();
+  await f.request("/lessons/1", "PATCH", { notes: "Notes du propriétaire" });
+  const mailCount = f.mails.length;
+  assert.equal(
+    (
+      await f.request("/admin/reset", "POST", {
+        confirmation: "RECOMMENCER",
+        erase_notebook: false,
+      })
+    ).status,
+    200,
+  );
+  const papa = await (
+    await f.request("/state", "GET", undefined, { cookie: "" })
+  ).json();
+  assert.deepEqual(papa.progress, {});
+  assert.deepEqual(papa.chat, []);
+  assert.deepEqual(papa.reviews, {});
+  assert.equal(papa.artworks.length, 1);
+  assert.equal(papa.artworks[0].id, artwork.id);
+  assert.equal(papa.user.notifications, false);
+  const user = (
+    await f.s.db.query("SELECT * FROM atelier_users WHERE id=$1", [learner.id])
+  ).rows[0];
+  assert.notEqual(user.training_run, learner.training_run);
+  assert.equal(
+    (await (await f.request("/state")).json()).progress[1].notes,
+    "Notes du propriétaire",
+  );
+  assert.equal(
+    (await (await f.request("/admin/status")).json()).gift_activated,
+    false,
+  );
+  assert.equal(f.mails.length, mailCount);
+  assert.equal(
+    (
+      await f.s.db.query(
+        "SELECT status FROM atelier_email_queue WHERE user_id=$1",
+        [learner.id],
+      )
+    ).rows[0].status,
+    "cancelled",
+  );
+});
+
+test("explicit notebook reset revokes photograph access and cleanup deletes the bytes", async () => {
+  const a = (await (await upload()).json()).artwork;
+  await f.login();
+  assert.equal(
+    (
+      await f.request("/admin/reset", "POST", {
+        confirmation: "RECOMMENCER",
+        erase_notebook: true,
+      })
+    ).status,
+    200,
+  );
+  assert.equal(
+    (
+      await f.request(`/artworks/${a.id}/image`, "GET", undefined, {
+        cookie: "",
+      })
+    ).status,
+    404,
+  );
+  await runMailWorker(f.s);
+  assert.equal(f.blobs.size, 0);
+});
+
+test("explicit invitation sends one styled mail, subscribes only as chosen and cannot be duplicated", async () => {
+  await f.request("/state");
+  await f.s.db.query("UPDATE atelier_users SET training_started_at=now()-interval '30 days' WHERE role='learner'");
+  await f.login();
+  const b = {
+    confirmation: "INVITER PAPA",
+    notifications: true,
+    to: "somebody@example.test",
+  };
+  const r = await f.request("/admin/invite", "POST", b);
+  assert.equal(r.status, 200);
+  let papa = f.mails.filter((m) => m.to === "papa@example.test");
+  assert.equal(papa.length, 1);
+  assert.match(papa[0].html!, /#cours\/1/);
+  assert.match(papa[0].text, /#cours\/1/);
+  assert.equal((await f.request("/admin/invite", "POST", b)).status, 200);
+  assert.equal(f.mails.filter((m) => m.to === "papa@example.test").length, 1);
+  assert.equal(
+    (await (await f.request("/admin/status")).json()).invitation.status,
+    "sent",
+  );
+  assert.equal(
+    (await (await f.request("/state", "GET", undefined, { cookie: "" })).json())
+      .user.notifications,
+    true,
+  );
+  const start=(await f.s.db.query("SELECT training_started_at FROM atelier_users WHERE role='learner'")).rows[0].training_started_at;
+  assert.ok(Date.now()-new Date(start).getTime()<60000);
+  assert.equal((await runMailWorker(f.s)).sent, 0);
+  await f.request("/admin/reset", "POST", {
+    confirmation: "RECOMMENCER",
+    erase_notebook: false,
+  });
+  assert.equal(
+    (
+      await f.request("/admin/invite", "POST", {
+        confirmation: "INVITER PAPA",
+        notifications: false,
+      })
+    ).status,
+    200,
+  );
+  assert.equal(f.mails.filter((m) => m.to === "papa@example.test").length, 2);
+  assert.equal(
+    (await (await f.request("/state", "GET", undefined, { cookie: "" })).json())
+      .user.notifications,
+    false,
+  );
+});
+
+test("an ambiguous SMTP failure is never blindly retried and does not enable follow-up mail", async () => {
+  await f.login();
+  const send = f.s.send;
+  let attempts = 0;
+  f.s.send = async () => {
+    attempts++;
+    throw new Error("timeout");
+  };
+  try {
+    const b = { confirmation: "INVITER PAPA", notifications: true };
+    assert.equal((await f.request("/admin/invite", "POST", b)).status, 503);
+    assert.equal((await f.request("/admin/invite", "POST", b)).status, 409);
+    assert.equal(attempts, 1);
+    assert.equal(
+      (await (await f.request("/admin/status")).json()).invitation.status,
+      "uncertain",
+    );
+    assert.equal(
+      (
+        await (
+          await f.request("/state", "GET", undefined, { cookie: "" })
+        ).json()
+      ).user.notifications,
+      false,
+    );
+  } finally {
+    f.s.send = send;
+  }
+});
+
+test("an active dispatch lease prevents a reset or a competing invitation", async () => {
+  await f.login();
+  await f.s.db.query(
+    "INSERT INTO atelier_mail_lock(key,token,expires_at) VALUES ('dispatch',gen_random_uuid(),now()+interval '1 minute')",
+  );
+  assert.equal(
+    (
+      await f.request("/admin/reset", "POST", {
+        confirmation: "RECOMMENCER",
+        erase_notebook: false,
+      })
+    ).status,
+    409,
+  );
+  assert.equal(
+    (
+      await f.request("/admin/invite", "POST", {
+        confirmation: "INVITER PAPA",
+        notifications: false,
+      })
+    ).status,
+    409,
+  );
+  assert.equal(f.mails.filter((m) => m.to === "papa@example.test").length, 0);
+});
+
+test("a failed reset rolls back training and notebook changes together", async () => {
+  await f.request("/lessons/1", "PATCH", { notes: "À conserver" });
+  const artwork = (await (await upload()).json()).artwork;
+  await f.login();
+  const connect = f.s.db.connect;
+  f.s.db.connect = async () => {
+    const c = await connect();
+    return {
+      release: c.release,
+      query: async (sql: string, params?: any[]) => {
+        if (sql.startsWith("UPDATE atelier_users SET training_run"))
+          throw new Error("isolated reset fault");
+        return c.query(sql, params);
+      },
+    };
+  };
+  try {
+    assert.equal(
+      (
+        await f.request("/admin/reset", "POST", {
+          confirmation: "RECOMMENCER",
+          erase_notebook: true,
+        })
+      ).status,
+      503,
+    );
+  } finally {
+    f.s.db.connect = connect;
+  }
+  const state = await (
+    await f.request("/state", "GET", undefined, { cookie: "" })
+  ).json();
+  assert.equal(state.progress[1].notes, "À conserver");
+  assert.equal(state.artworks[0].id, artwork.id);
+});
+
+test("an explicit SMTP rejection can be retried manually without resending an accepted invitation", async () => {
+  await f.login();
+  const send = f.s.send;
+  f.s.send = async () => {
+    throw Object.assign(new Error("isolated SMTP refusal"), {
+      responseCode: 535,
+    });
+  };
+  try {
+    assert.equal(
+      (
+        await f.request("/admin/invite", "POST", {
+          confirmation: "INVITER PAPA",
+          notifications: false,
+        })
+      ).status,
+      503,
+    );
+    assert.equal(
+      (await (await f.request("/admin/status")).json()).invitation.status,
+      "failed",
+    );
+  } finally {
+    f.s.send = send;
+  }
+  assert.equal(
+    (
+      await f.request("/admin/invite", "POST", {
+        confirmation: "INVITER PAPA",
+        notifications: false,
+      })
+    ).status,
+    200,
+  );
+  assert.equal(f.mails.filter((m) => m.to === "papa@example.test").length, 1);
 });

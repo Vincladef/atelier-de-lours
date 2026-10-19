@@ -139,7 +139,7 @@ export async function fixtures() {
   }
   async function reset() {
     await db.query(
-      "TRUNCATE atelier_users,atelier_magic_links,atelier_sessions,atelier_lessons,atelier_weekly_reviews,atelier_artworks,atelier_chat,atelier_limits,atelier_email_queue,atelier_admin_audit CASCADE",
+      "TRUNCATE atelier_mail_lock,atelier_users,atelier_magic_links,atelier_sessions,atelier_lessons,atelier_weekly_reviews,atelier_artworks,atelier_chat,atelier_limits,atelier_email_queue,atelier_admin_audit CASCADE",
     );
     await db.query(
       "UPDATE atelier_settings SET enabled=false WHERE key='gift_activated'",

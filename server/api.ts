@@ -14,6 +14,7 @@ import {
   token,
   uuid,
 } from "./security";
+import { resetTraining, inviteLearner } from "./training-admin";
 import { requireLessonAccess } from "./access";
 import { image } from "./images";
 import { askOwl } from "./ai";
@@ -451,13 +452,45 @@ export async function handle(req: Request, s: Services): Promise<Response> {
       const queue = await s.db.query(
         "SELECT status,count(*)::integer AS count FROM atelier_email_queue GROUP BY status",
       );
+      const invitations = await s.db.query(
+        "SELECT q.status,q.sent_at,q.attempts FROM atelier_email_queue q JOIN atelier_users u ON u.id=q.user_id WHERE u.email=$1 AND q.training_run=u.training_run AND q.kind='welcome'",
+        [normalizeEmail(s.env.PAPA_EMAIL)],
+      );
       return json({
+        invitation: invitations.rows[0] || null,
         gift_activated: await giftActive(s),
         mail_configured: configured(s),
         ai_configured: Boolean(s.env.DEEPSEEK_API_KEY),
         database_connected: true,
         queue: queue.rows,
       });
+    }
+    if (path === "/admin/reset" && method === "POST") {
+      owner(u);
+      const b = await body(req);
+      if (
+        b.confirmation !== "RECOMMENCER" ||
+        typeof b.erase_notebook !== "boolean"
+      )
+        throw new HttpError(
+          400,
+          "Confirme la réinitialisation avec le mot RECOMMENCER et le choix du carnet.",
+        );
+      return json(await resetTraining(s, u.id, b.erase_notebook));
+    }
+    if (path === "/admin/invite" && method === "POST") {
+      owner(u);
+      const b = await body(req);
+      if (
+        b.confirmation !== "INVITER PAPA" ||
+        typeof b.notifications !== "boolean"
+      )
+        throw new HttpError(
+          400,
+          "Confirme l’envoi avec les mots INVITER PAPA.",
+        );
+      await limit(s.db, "owner-invitation", 3, 3600);
+      return json(await inviteLearner(s, u.id, b.notifications));
     }
     if (path === "/admin/activation" && method === "POST") {
       owner(u);

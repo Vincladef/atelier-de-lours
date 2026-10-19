@@ -38,5 +38,7 @@ export interface User {
   notifications: boolean;
   reminders: boolean;
   created_at: string;
+  training_run: string;
+  training_started_at: string;
   last_active_at: string;
 }

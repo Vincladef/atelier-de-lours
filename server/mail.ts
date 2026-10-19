@@ -1,4 +1,5 @@
 import { parisDate, nextLesson } from "../src/lib/curriculum";
+import { withMailLock } from "./mail-lock";
 import { normalizeEmail } from "./security";
 import type { Services, User } from "./types";
 export async function enqueue(
@@ -9,7 +10,7 @@ export async function enqueue(
   suffix = "",
 ) {
   await s.db.query(
-    "INSERT INTO atelier_email_queue(user_id,kind,week,dedup_key) VALUES ($1,$2,$3,$4) ON CONFLICT(dedup_key) DO NOTHING",
+    "INSERT INTO atelier_email_queue(user_id,kind,week,dedup_key,training_run) SELECT id,$2,$3,$4 || ':' || training_run::text,training_run FROM atelier_users WHERE id=$1 ON CONFLICT(dedup_key) DO NOTHING",
     [userId, kind, week || null, `${userId}:${kind}:${week || ""}:${suffix}`],
   );
 }
@@ -41,6 +42,10 @@ async function housekeeping(s: Services) {
 
 /** A stalled SMTP send is marked uncertain, never blindly retried after a crash. */
 export async function runMailWorker(s: Services) {
+  return withMailLock(s, runLockedMailWorker);
+}
+async function runLockedMailWorker(s: Services) {
+  const started = Date.now();
   await housekeeping(s);
   if (!(await giftActive(s))) return { sent: 0, disabled: true };
   const { rows: users } = await s.db.query<User>(
@@ -63,7 +68,8 @@ export async function runMailWorker(s: Services) {
       currentWeek++;
     // Calendar never runs ahead of the learner. Each eligible week is sent once.
     const elapsedDays = Math.floor(
-      (Date.now() - new Date(u.created_at).getTime()) / 86400000,
+      (Date.now() - new Date(u.training_started_at || u.created_at).getTime()) /
+        86400000,
     );
     const calendarWeek = Math.min(8, Math.floor(elapsedDays / 7) + 1);
     if (currentWeek <= calendarWeek)
@@ -87,12 +93,13 @@ export async function runMailWorker(s: Services) {
   );
   let sent = 0;
   for (let i = 0; i < 8; i++) {
+    if (Date.now() - started > 15000) break;
     if (!(await giftActive(s))) break;
     const { rows } = await s.db
       .query(`UPDATE atelier_email_queue SET status='sending', claimed_at=now(), attempts=attempts+1
       WHERE id=(SELECT q.id FROM atelier_email_queue q JOIN atelier_users u ON u.id=q.user_id
         WHERE q.status IN ('pending','failed') AND q.due_at<=now() AND q.attempts<3 AND u.notifications=true
-        AND u.role='learner' AND (q.kind<>'reminder' OR u.reminders=true)
+        AND u.role='learner' AND q.training_run=u.training_run AND (q.kind<>'reminder' OR u.reminders=true)
         ORDER BY q.due_at FOR UPDATE OF q SKIP LOCKED LIMIT 1) RETURNING *`);
     const q = rows[0];
     if (!q) break;

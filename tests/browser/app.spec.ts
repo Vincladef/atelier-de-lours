@@ -616,11 +616,9 @@ test("weekly email preview shows a branded message and a working application des
   await page
     .locator('iframe[title="Aperçu de l’email"]')
     .scrollIntoViewIfNeeded();
-  await preview
-    .locator("body")
-    .screenshot({
-      path: `test-results/${info.project.name}-email-preview.png`,
-    });
+  await preview.locator("body").screenshot({
+    path: `test-results/${info.project.name}-email-preview.png`,
+  });
   await expect
     .poll(() =>
       preview
@@ -631,4 +629,78 @@ test("weekly email preview shows a branded message and a working application des
     )
     .toBe(true);
   await noOverflow(page);
+});
+
+test("discreet owner controls reset the course and explicitly send only one invitation (mock SMTP)", async ({
+  page,
+}, info) => {
+  await page.getByRole("button", { name: "Préférences", exact: true }).click();
+  await expect(
+    page.getByText("Administration du cadeau", { exact: true }),
+  ).toHaveCount(0);
+  await page.keyboard.press("Escape");
+  await login(page);
+  await page.getByRole("button", { name: "Préférences", exact: true }).click();
+  await page.getByText("Administration du cadeau", { exact: true }).click();
+  await page
+    .getByText("Recommencer la formation de Papa", { exact: true })
+    .click();
+  const reset = page.getByRole("button", {
+    name: "Réinitialiser la formation de Papa",
+  });
+  await expect(reset).toBeDisabled();
+  await expect(
+    page.getByLabel("Supprimer aussi les dessins"),
+  ).not.toBeChecked();
+  await page
+    .getByLabel("Écris « RECOMMENCER » pour confirmer")
+    .fill("RECOMMENCER");
+  await reset.click();
+  await expect(page.locator(".toast")).toContainText("remise à zéro");
+  await page.getByText("Inviter Papa à commencer", { exact: true }).click();
+  const send = page.getByRole("button", {
+    name: "Envoyer l’invitation à Papa",
+  });
+  await expect(send).toBeDisabled();
+  const preview = page.frameLocator('iframe[title="Aperçu de l’invitation"]');
+  await expect(
+    preview.getByRole("link", { name: "Ouvrir ma séance" }),
+  ).toHaveAttribute("href", "https://atelier-de-lours.netlify.app/#cours/1");
+  await page
+    .getByLabel("Écris « INVITER PAPA » pour confirmer l’envoi")
+    .fill("INVITER PAPA");
+  await send.scrollIntoViewIfNeeded();
+  await page.screenshot({
+    path: `test-results/${info.project.name}-owner-controls.png`,
+    fullPage: true,
+  });
+  await send.click();
+  await expect(
+    page.getByText("L’invitation a déjà été envoyée pour ce parcours."),
+  ).toBeVisible();
+  const inbox = await (await page.request.get("/__test/inbox")).json();
+  expect(inbox.filter((m: any) => m.to === "papa@example.test")).toHaveLength(
+    1,
+  );
+  await page.keyboard.press("Escape");
+  await page.getByRole("button", { name: "Préférences", exact: true }).click();
+  await page.getByText("Administration du cadeau", { exact: true }).click();
+  await page.getByText("Inviter Papa à commencer", { exact: true }).click();
+  await expect(
+    page.getByRole("button", { name: "Envoyer l’invitation à Papa" }),
+  ).toHaveCount(0);
+  await page
+    .getByRole("button", { name: "Suspendre les envois à Papa" })
+    .click();
+  await expect(
+    page.getByText("Les envois à Papa sont désactivés."),
+  ).toBeVisible();
+  await page
+    .getByRole("button", { name: "Réautoriser les courriers de formation" })
+    .click();
+  await expect(page.getByText("Le cadeau est ouvert.")).toBeVisible();
+  const finalInbox = await (await page.request.get("/__test/inbox")).json();
+  expect(
+    finalInbox.filter((m: any) => m.to === "papa@example.test"),
+  ).toHaveLength(1);
 });
