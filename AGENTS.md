@@ -19,7 +19,7 @@ Application personnelle de dessin pour un débutant adulte. La référence visue
 - Ne jamais afficher les secrets, extraire des jetons du proxy, les mettre dans Git, le frontend, les journaux ou une réponse HTTP.
 - Ne jamais envoyer un email réel à `PAPA_EMAIL` pendant le développement ou les tests. Tests réels exclusivement à `EMAIL_FROM`.
 - Ne jamais activer `gift_activated` sans une instruction explicite du propriétaire. Ne pas désactiver le garde-fou pour tester.
-- À la demande du propriétaire, l’atelier de Papa est accessible sans connexion : les visiteurs partagent son carnet et sa progression. Les Blobs restent privés et passent par l’API. Les données du compte propriétaire et les fonctions d’administration nécessitent toujours sa session.
+- À la demande du propriétaire, l’atelier de Papa est accessible sans connexion : les visiteurs partagent son carnet et sa progression. Les Blobs restent privés et passent par l’API. Les anciennes routes propriétaire restent protégées. À la demande explicite du propriétaire, les options de formation (invitation, réinitialisation, emails) sont accessibles sans connexion dans la roue dentée via /settings/*, avec confirmations et limites côté serveur.
 - Ne transmettre une photo à DeepSeek que sur demande explicite d’analyse avec consentement.
 - Ajouter une migration SQL versionnée ; ne pas modifier une migration déjà appliquée. Ne pas réinitialiser les données pour résoudre un problème de configuration.
 - Aucun endpoint de vérification temporaire ne doit rester dans le déploiement final. Ne jamais publier de session ou de lien de connexion.

@@ -3,7 +3,7 @@ import { mailContent } from "../lib/mailContent";
 import { weeklyEmails } from "../lib/curriculum";
 import { api } from "../lib/api";
 import { useStore } from "../lib/store";
-import { Credits, ErrorMessage, Modal, go } from "./Common";
+import { Credits, ErrorMessage, Modal } from "./Common";
 export function Settings({ close }: { close: () => void }) {
   const s = useStore();
   const user = s.data!.user;
@@ -16,12 +16,11 @@ export function Settings({ close }: { close: () => void }) {
     [eraseNotebook, setEraseNotebook] = useState(false),
     [inviteNotifications, setInviteNotifications] = useState(true);
   async function load() {
-    if (user.role === "owner")
-      try {
-        setStatus(await api("/admin/status"));
-      } catch (e) {
-        setError((e as Error).message);
-      }
+    try {
+      setStatus(await api("/settings/status"));
+    } catch (e) {
+      setError((e as Error).message);
+    }
   }
   useEffect(() => {
     void load();
@@ -99,7 +98,7 @@ export function Settings({ close }: { close: () => void }) {
                     sandbox=""
                     srcDoc={mailContent("weekly", preview).html}
                   />
-                  {user.role === "owner" && (
+                  {
                     <button
                       className="button ghost"
                       disabled={busy}
@@ -107,7 +106,7 @@ export function Settings({ close }: { close: () => void }) {
                         setBusy(true);
                         setError("");
                         try {
-                          await api("/admin/test-email", "POST", {
+                          await api("/settings/test-email", "POST", {
                             week: preview,
                           });
                           s.notify(
@@ -120,17 +119,17 @@ export function Settings({ close }: { close: () => void }) {
                         }
                       }}
                     >
-                      M’envoyer ce test (propriétaire)
+                      Envoyer un test à l’adresse de préparation
                     </button>
-                  )}
+                  }
                 </div>
               )}
             </Fragment>
           ))}
         </details>
-        {user.role === "owner" && (
+        {
           <details className="dropdown">
-            <summary>Administration du cadeau</summary>
+            <summary>La formation et les emails</summary>
             {status ? (
               <>
                 <p>
@@ -143,10 +142,6 @@ export function Settings({ close }: { close: () => void }) {
                   {status.mail_configured ? "Email configuré. " : ""}
                   {status.ai_configured ? "Clé IA configurée." : ""}
                 </p>
-                <p className="small">
-                  Ton compte propriétaire possède son propre carnet. Les essais
-                  ne remplissent pas celui de Papa.
-                </p>
                 {status.gift_activated && (
                   <button
                     className="textbutton"
@@ -155,7 +150,7 @@ export function Settings({ close }: { close: () => void }) {
                       setBusy(true);
                       setError("");
                       try {
-                        await api("/admin/pause", "POST", {});
+                        await api("/settings/pause", "POST", {});
                         await load();
                       } catch (e) {
                         setError((e as Error).message);
@@ -182,7 +177,7 @@ export function Settings({ close }: { close: () => void }) {
                             setBusy(true);
                             setError("");
                             try {
-                              await api("/admin/activation", "POST", {
+                              await api("/settings/activation", "POST", {
                                 confirmation: "ACTIVER LES ENVOIS À PAPA",
                               });
                               await load();
@@ -218,7 +213,7 @@ export function Settings({ close }: { close: () => void }) {
                           setError("");
                           try {
                             const result = await api<{ already_sent: boolean }>(
-                              "/admin/invite",
+                              "/settings/invite",
                               "POST",
                               {
                                 confirmation,
@@ -302,12 +297,14 @@ export function Settings({ close }: { close: () => void }) {
                       setBusy(true);
                       setError("");
                       try {
-                        await api("/admin/reset", "POST", {
+                        await s.refresh();
+                        await api("/settings/reset", "POST", {
                           confirmation: resetConfirmation,
                           erase_notebook: eraseNotebook,
                         });
                         setResetConfirmation("");
                         setEraseNotebook(false);
+                        await s.refresh();
                         await load();
                         s.notify("La formation de Papa est remise à zéro.");
                       } catch (e) {
@@ -349,35 +346,9 @@ export function Settings({ close }: { close: () => void }) {
               <p role="status">Vérification de la configuration…</p>
             )}
           </details>
-        )}
+        }
         <Credits />
         <ErrorMessage message={error} />
-        <div className="divider" />
-        {user.role === "owner" ? (
-          <button
-            className="textbutton"
-            onClick={async () => {
-              try {
-                await s.logout();
-                close();
-              } catch (e) {
-                setError((e as Error).message);
-              }
-            }}
-          >
-            Quitter l’administration
-          </button>
-        ) : (
-          <button
-            className="textbutton"
-            onClick={() => {
-              close();
-              go("connexion");
-            }}
-          >
-            Accès propriétaire
-          </button>
-        )}
       </div>
     </Modal>
   );

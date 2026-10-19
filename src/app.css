@@ -49,19 +49,13 @@ button:disabled {
   font-size: 12px;
 }
 .head-avatar {
-  width: auto;
-  min-height: 44px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
-  border-radius: 8px;
-  color: var(--forest);
-  font: inherit;
-  font-size: 13px;
-  font-weight: 700;
+  width: 44px;
+  height: 44px;
   cursor: pointer;
+  color: var(--forest);
+  font-size: 22px;
 }
+
 .brand small {
   color: #625d51;
 }
@@ -547,12 +541,8 @@ button:disabled {
     border-radius: 8px;
   }
   .head-avatar {
-    max-width: 110px;
-    padding: 6px 8px;
-    gap: 5px;
-  }
-  .preferences-label {
-    line-height: 1.2;
+    width: 44px;
+    height: 44px;
   }
   .notebook-gallery {
     gap: 18px 12px;

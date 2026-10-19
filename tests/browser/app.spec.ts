@@ -307,11 +307,15 @@ test("owl questions and explicit image consent; no fake analysis", async ({
 test("settings are keyboard accessible and gift stays disabled", async ({
   page,
 }, info) => {
-  await login(page);
-  await page.getByRole("button", { name: "Mes préférences", exact: true }).click();
-  const dialog = page.getByRole("dialog", { name: "Mes préférences", exact: true });
+  await page
+    .getByRole("button", { name: "Mes préférences", exact: true })
+    .click();
+  const dialog = page.getByRole("dialog", {
+    name: "Mes préférences",
+    exact: true,
+  });
   await expect(dialog).toBeVisible();
-  await page.getByText("Administration du cadeau", { exact: true }).click();
+  await page.getByText("La formation et les emails", { exact: true }).click();
   await expect(
     dialog.getByText("Les envois à Papa sont désactivés."),
   ).toBeVisible();
@@ -333,14 +337,16 @@ test("settings are keyboard accessible and gift stays disabled", async ({
     page.getByRole("button", { name: "Mes préférences", exact: true }),
   ).toBeFocused();
   await page.reload();
-  await page.getByRole("button", { name: "Mes préférences", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Mes préférences", exact: true })
+    .click();
   await expect(
     page.getByRole("button", {
       name: "Recevoir le courrier de l’Ours",
       exact: true,
     }),
   ).toHaveAttribute("aria-pressed", "true");
-  await page.getByRole("button", { name: "Quitter l’administration" }).click();
+  await page.keyboard.press("Escape");
   await expect(
     page.getByRole("button", { name: "Reprendre mon cours" }),
   ).toBeVisible();
@@ -596,7 +602,9 @@ test("future lessons stay locked until a confirmed save, and a saved success unl
 test("weekly email preview shows a branded message and a working application destination", async ({
   page,
 }, info) => {
-  await page.getByRole("button", { name: "Mes préférences", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Mes préférences", exact: true })
+    .click();
   await page
     .getByText("Le courrier des huit semaines", { exact: true })
     .click();
@@ -631,17 +639,16 @@ test("weekly email preview shows a branded message and a working application des
   await noOverflow(page);
 });
 
-test("discreet owner controls reset the course and explicitly send only one invitation (mock SMTP)", async ({
+test("direct formation controls reset the course and explicitly send only one invitation (mock SMTP)", async ({
   page,
 }, info) => {
-  await page.getByRole("button", { name: "Mes préférences", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Mes préférences", exact: true })
+    .click();
   await expect(
-    page.getByText("Administration du cadeau", { exact: true }),
+    page.getByRole("button", { name: "Accès propriétaire" }),
   ).toHaveCount(0);
-  await page.keyboard.press("Escape");
-  await login(page);
-  await page.getByRole("button", { name: "Mes préférences", exact: true }).click();
-  await page.getByText("Administration du cadeau", { exact: true }).click();
+  await page.getByText("La formation et les emails", { exact: true }).click();
   await page
     .getByText("Recommencer la formation de Papa", { exact: true })
     .click();
@@ -683,8 +690,10 @@ test("discreet owner controls reset the course and explicitly send only one invi
     1,
   );
   await page.keyboard.press("Escape");
-  await page.getByRole("button", { name: "Mes préférences", exact: true }).click();
-  await page.getByText("Administration du cadeau", { exact: true }).click();
+  await page
+    .getByRole("button", { name: "Mes préférences", exact: true })
+    .click();
+  await page.getByText("La formation et les emails", { exact: true }).click();
   await page.getByText("Inviter Papa à commencer", { exact: true }).click();
   await expect(
     page.getByRole("button", { name: "Envoyer l’invitation à Papa" }),

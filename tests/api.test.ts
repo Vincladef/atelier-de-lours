@@ -909,7 +909,9 @@ test("explicit notebook reset revokes photograph access and cleanup deletes the 
 
 test("explicit invitation sends one styled mail, subscribes only as chosen and cannot be duplicated", async () => {
   await f.request("/state");
-  await f.s.db.query("UPDATE atelier_users SET training_started_at=now()-interval '30 days' WHERE role='learner'");
+  await f.s.db.query(
+    "UPDATE atelier_users SET training_started_at=now()-interval '30 days' WHERE role='learner'",
+  );
   await f.login();
   const b = {
     confirmation: "INVITER PAPA",
@@ -933,8 +935,12 @@ test("explicit invitation sends one styled mail, subscribes only as chosen and c
       .user.notifications,
     true,
   );
-  const start=(await f.s.db.query("SELECT training_started_at FROM atelier_users WHERE role='learner'")).rows[0].training_started_at;
-  assert.ok(Date.now()-new Date(start).getTime()<60000);
+  const start = (
+    await f.s.db.query(
+      "SELECT training_started_at FROM atelier_users WHERE role='learner'",
+    )
+  ).rows[0].training_started_at;
+  assert.ok(Date.now() - new Date(start).getTime() < 60000);
   assert.equal((await runMailWorker(f.s)).sent, 0);
   await f.request("/admin/reset", "POST", {
     confirmation: "RECOMMENCER",
@@ -1084,4 +1090,45 @@ test("an explicit SMTP rejection can be retried manually without resending an ac
     200,
   );
   assert.equal(f.mails.filter((m) => m.to === "papa@example.test").length, 1);
+});
+
+test("shared formation settings need no login but retain confirmations, origin checks and invitation deduplication", async () => {
+  assert.equal((await f.request("/settings/status")).status, 200);
+  for (const path of [
+    "/settings/reset",
+    "/settings/invite",
+    "/settings/activation",
+  ]) {
+    assert.equal((await f.request(path, "POST", {})).status, 400);
+    assert.equal(
+      (await f.request(path, "POST", {}, { origin: "https://other.example" }))
+        .status,
+      403,
+    );
+  }
+  assert.equal(f.mails.length, 0);
+  await f.request("/lessons/1", "PATCH", { completed: true });
+  assert.equal(
+    (
+      await f.request("/settings/reset", "POST", {
+        confirmation: "RECOMMENCER",
+        erase_notebook: false,
+      })
+    ).status,
+    200,
+  );
+  assert.deepEqual((await (await f.request("/state")).json()).progress, {});
+  for (let i = 0; i < 2; i++)
+    assert.equal(
+      (
+        await f.request("/settings/invite", "POST", {
+          confirmation: "INVITER PAPA",
+          notifications: false,
+          to: "other@example.test",
+        })
+      ).status,
+      200,
+    );
+  assert.equal(f.mails.length, 1);
+  assert.equal(f.mails[0].to, "papa@example.test");
 });

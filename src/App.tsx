@@ -135,7 +135,6 @@ export function App() {
                   aria-expanded={settings}
                 >
                   <span aria-hidden="true">⚙</span>
-                  <span className="preferences-label">Mes préférences</span>
                 </button>
               </div>
             </>

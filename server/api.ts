@@ -48,6 +48,14 @@ export async function handle(req: Request, s: Services): Promise<Response> {
       url.pathname
         .replace(/^\/\.netlify\/functions\/api/, "")
         .replace(/^\/api/, "") || "/";
+    // The single-user formation exposes these options directly, by owner request.
+    const sharedSettings =
+      /^\/settings\/(status|reset|invite|activation|pause|test-email)$/.test(
+        path,
+      );
+    const actionPath = sharedSettings
+      ? path.replace("/settings/", "/admin/")
+      : path;
     const method = req.method;
     if (!["GET", "POST", "PATCH", "DELETE"].includes(method))
       throw new HttpError(405, "Cette action n’est pas disponible.");
@@ -447,8 +455,8 @@ export async function handle(req: Request, s: Services): Promise<Response> {
         await askOwl(s, u, id, question, b.image, b.consent, stage, page),
       );
     }
-    if (path === "/admin/status" && method === "GET") {
-      owner(u);
+    if (actionPath === "/admin/status" && method === "GET") {
+      if (!sharedSettings) owner(u);
       const queue = await s.db.query(
         "SELECT status,count(*)::integer AS count FROM atelier_email_queue GROUP BY status",
       );
@@ -465,8 +473,8 @@ export async function handle(req: Request, s: Services): Promise<Response> {
         queue: queue.rows,
       });
     }
-    if (path === "/admin/reset" && method === "POST") {
-      owner(u);
+    if (actionPath === "/admin/reset" && method === "POST") {
+      if (!sharedSettings) owner(u);
       const b = await body(req);
       if (
         b.confirmation !== "RECOMMENCER" ||
@@ -478,8 +486,8 @@ export async function handle(req: Request, s: Services): Promise<Response> {
         );
       return json(await resetTraining(s, u.id, b.erase_notebook));
     }
-    if (path === "/admin/invite" && method === "POST") {
-      owner(u);
+    if (actionPath === "/admin/invite" && method === "POST") {
+      if (!sharedSettings) owner(u);
       const b = await body(req);
       if (
         b.confirmation !== "INVITER PAPA" ||
@@ -492,8 +500,8 @@ export async function handle(req: Request, s: Services): Promise<Response> {
       await limit(s.db, "owner-invitation", 3, 3600);
       return json(await inviteLearner(s, u.id, b.notifications));
     }
-    if (path === "/admin/activation" && method === "POST") {
-      owner(u);
+    if (actionPath === "/admin/activation" && method === "POST") {
+      if (!sharedSettings) owner(u);
       const b = await body(req);
       if (b.confirmation !== "ACTIVER LES ENVOIS À PAPA")
         throw new HttpError(
@@ -509,8 +517,8 @@ export async function handle(req: Request, s: Services): Promise<Response> {
       );
       return json({ ok: true });
     }
-    if (path === "/admin/pause" && method === "POST") {
-      owner(u);
+    if (actionPath === "/admin/pause" && method === "POST") {
+      if (!sharedSettings) owner(u);
       await s.db.query(
         "UPDATE atelier_settings SET enabled=false,updated_at=now() WHERE key='gift_activated'",
       );
@@ -520,8 +528,8 @@ export async function handle(req: Request, s: Services): Promise<Response> {
       );
       return json({ ok: true });
     }
-    if (path === "/admin/test-email" && method === "POST") {
-      owner(u);
+    if (actionPath === "/admin/test-email" && method === "POST") {
+      if (!sharedSettings) owner(u);
       await limit(s.db, "test-email", 3, 3600);
       const b = await body(req);
       const week = integer(b.week, 1, 8);
