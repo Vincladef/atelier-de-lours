@@ -130,9 +130,12 @@ export function App() {
                 <button
                   className="head-avatar"
                   onClick={() => setSettings(true)}
-                  aria-label="Préférences"
+                  aria-label="Mes préférences"
+                  aria-haspopup="dialog"
+                  aria-expanded={settings}
                 >
-                  ⚙
+                  <span aria-hidden="true">⚙</span>
+                  <span className="preferences-label">Mes préférences</span>
                 </button>
               </div>
             </>

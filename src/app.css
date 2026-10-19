@@ -49,8 +49,17 @@ button:disabled {
   font-size: 12px;
 }
 .head-avatar {
-  width: 44px;
-  height: 44px;
+  width: auto;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  color: var(--forest);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
   cursor: pointer;
 }
 .brand small {
@@ -538,8 +547,12 @@ button:disabled {
     border-radius: 8px;
   }
   .head-avatar {
-    width: 44px;
-    height: 44px;
+    max-width: 110px;
+    padding: 6px 8px;
+    gap: 5px;
+  }
+  .preferences-label {
+    line-height: 1.2;
   }
   .notebook-gallery {
     gap: 18px 12px;

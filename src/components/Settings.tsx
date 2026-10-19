@@ -41,7 +41,7 @@ export function Settings({ close }: { close: () => void }) {
     }
   }
   return (
-    <Modal title="À ma manière." close={close}>
+    <Modal title="Mes préférences" close={close}>
       <div className="settings-page">
         {[
           [
