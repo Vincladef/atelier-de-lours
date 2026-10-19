@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { api } from "./lib/api";
 import { useStore } from "./lib/store";
 import { ErrorMessage, go, Photo } from "./components/Common";
-import { Home, Program, Letter } from "./components/Pages";
+import { canOpenLesson } from "./lib/curriculum";
+import { Home, Program, Letter, LockedLesson } from "./components/Pages";
 import { LessonPage } from "./components/Lesson";
 import { Notebook } from "./components/Notebook";
 import { Studio } from "./components/Studio";
@@ -49,11 +50,16 @@ export function App() {
         Ouverture de l’atelier…
       </div>
     );
-  else if (root.split("?")[0] === "connexion") content = <Login error={loginError} />;
+  else if (root.split("?")[0] === "connexion")
+    content = <Login error={loginError} />;
   else if (!s.data)
     content = (
       <div className="loading">
-        <ErrorMessage message={s.authError || "L’atelier ne peut pas s’ouvrir pour le moment."} />
+        <ErrorMessage
+          message={
+            s.authError || "L’atelier ne peut pas s’ouvrir pour le moment."
+          }
+        />
         <button className="button primary" onClick={() => void s.refresh()}>
           Réessayer
         </button>
@@ -62,10 +68,15 @@ export function App() {
   else if (
     root === "cours" &&
     param &&
+    Number.isInteger(Number(param)) &&
     Number(param) >= 1 &&
     Number(param) <= 16
   )
-    content = <LessonPage key={param} id={Number(param)} />;
+    content = canOpenLesson(Number(param), s.data.progress) ? (
+      <LessonPage key={param} id={Number(param)} />
+    ) : (
+      <LockedLesson id={Number(param)} />
+    );
   else if (root === "cours") content = <Program />;
   else if (root === "carnet") content = <Notebook />;
   else if (root === "studio") content = <Studio />;

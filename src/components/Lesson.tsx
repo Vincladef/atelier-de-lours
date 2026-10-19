@@ -3,6 +3,7 @@ import { lessons, weeks } from "../lib/curriculum";
 import { lessonPageContext } from "../lib/pageContext";
 import { useStore } from "../lib/store";
 import { ErrorMessage, go, Photo } from "./Common";
+import { SuccessMoment } from "./SuccessMoment";
 import { LessonChat } from "./LessonChat";
 import { Upload } from "./Notebook";
 import { weekPhotos } from "./Pages";
@@ -27,7 +28,8 @@ export function LessonPage({ id }: { id: number }) {
   };
   const [video, setVideo] = useState(false),
     [upload, setUpload] = useState(false),
-    [chatOpen, setChatOpen] = useState(false);
+    [chatOpen, setChatOpen] = useState(false),
+    [completing, setCompleting] = useState(false);
   const [compact, setCompact] = useState(
     () => matchMedia("(max-width:880px)").matches,
   );
@@ -226,6 +228,16 @@ export function LessonPage({ id }: { id: number }) {
               <>
                 <span className="p-eyebrow">03 · Garder une trace</span>
                 <h2>{pageContext.title}</h2>
+                {s.achievement?.kind === "lesson" &&
+                  s.achievement.id === String(id) && (
+                    <SuccessMoment
+                      message={
+                        id === 16
+                          ? "Les seize séances sont dans le carnet. Bravo, Papa Ours !"
+                          : "Séance terminée. La suivante t’attend !"
+                      }
+                    />
+                  )}
                 <p>{pageContext.instruction}</p>
                 <button
                   className="button ghost"
@@ -298,7 +310,13 @@ export function LessonPage({ id }: { id: number }) {
                   ) : (
                     <button
                       className="button primary"
-                      onClick={() => void s.lesson(id, { completed: true })}
+                      disabled={completing}
+                      onClick={async () => {
+                        setCompleting(true);
+                        const saved = await s.lesson(id, { completed: true });
+                        if (saved) s.celebrate("lesson", String(id));
+                        setCompleting(false);
+                      }}
                     >
                       J’ai terminé ma leçon ✓
                     </button>

@@ -20,3 +20,15 @@ export interface LessonStage {
   phase: "observe" | "draw" | "finish";
   step: number;
 }
+
+export function firstRequiredLesson(
+  id: number,
+  progress: Record<string, { completed_at?: string | null }>,
+) {
+  return lessons.find((l) => l.index < id && !progress[l.index]?.completed_at)
+    ?.index;
+}
+export const canOpenLesson = (
+  id: number,
+  progress: Record<string, { completed_at?: string | null }>,
+) => firstRequiredLesson(id, progress) === undefined;

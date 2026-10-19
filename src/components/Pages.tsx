@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { lessons, nextLesson, weeks } from "../lib/curriculum";
+import {
+  lessons,
+  nextLesson,
+  weeks,
+  canOpenLesson,
+  firstRequiredLesson,
+} from "../lib/curriculum";
 import { useStore, type Artwork } from "../lib/store";
 import { go, Photo, type PhotoName } from "./Common";
 export const weekPhotos: PhotoName[] = [
@@ -28,7 +34,7 @@ export function Home() {
   const count = Object.values(d.progress).filter((p) => p.completed_at).length;
   const percent = Math.round((count / 16) * 100);
   const last = Object.values(d.progress)
-    .filter((p) => !p.completed_at)
+    .filter((p) => !p.completed_at && canOpenLesson(p.lesson_id, d.progress))
     .sort(
       (a, b) =>
         new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime(),
@@ -218,6 +224,7 @@ export function Program() {
                       <button
                         key={l.index}
                         className="lesson-row"
+                        disabled={!canOpenLesson(l.index, progress)}
                         onClick={() => go("cours/" + l.index)}
                       >
                         <span
@@ -232,14 +239,20 @@ export function Program() {
                           <strong>{l.title}</strong>
                           <small>
                             {l.minutes} minutes ·{" "}
-                            {progress[l.index]?.completed_at
-                              ? "Terminée"
-                              : progress[l.index]
-                                ? "En cours"
-                                : "À faire"}
+                            {!canOpenLesson(l.index, progress)
+                              ? `Après la séance ${firstRequiredLesson(l.index, progress)}`
+                              : progress[l.index]?.completed_at
+                                ? "Terminée"
+                                : progress[l.index]
+                                  ? "En cours"
+                                  : "À faire"}
                           </small>
                         </span>
-                        <span className="row-end">Ouvrir</span>
+                        <span className="row-end">
+                          {canOpenLesson(l.index, progress)
+                            ? "Ouvrir"
+                            : "Verrouillé"}
+                        </span>
                       </button>
                     ))}
                   </div>
@@ -288,5 +301,28 @@ export function Letter() {
         </p>
       </div>
     </>
+  );
+}
+
+export function LockedLesson({ id }: { id: number }) {
+  const { data } = useStore();
+  const required = firstRequiredLesson(id, data!.progress)!;
+  return (
+    <div className="content-sheet locked-lesson">
+      <h1 className="page-title">Une séance à la fois.</h1>
+      <p>
+        Termine la séance {required}, « {lessons[required - 1].title} », pour
+        ouvrir ce cours.
+      </p>
+      <button
+        className="button primary"
+        onClick={() => go(`cours/${required}`)}
+      >
+        Reprendre ma séance
+      </button>
+      <button className="button plain" onClick={() => go("cours")}>
+        Voir le programme
+      </button>
+    </div>
   );
 }

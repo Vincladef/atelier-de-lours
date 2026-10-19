@@ -1,6 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { api, compress } from "../lib/api";
-import { lessons, nextLesson, type LessonStage } from "../lib/curriculum";
+import {
+  lessons,
+  nextLesson,
+  canOpenLesson,
+  type LessonStage,
+} from "../lib/curriculum";
 import { useStore, type Chat } from "../lib/store";
 import { ErrorMessage, Photo } from "./Common";
 
@@ -8,7 +13,9 @@ export function Owl() {
   const s = useStore();
   const routeLesson = Number(location.hash.split("/")[1]);
   const [context, setContext] = useState(
-    routeLesson >= 1 && routeLesson <= 16
+    routeLesson >= 1 &&
+      routeLesson <= 16 &&
+      canOpenLesson(routeLesson, s.data!.progress)
       ? routeLesson
       : nextLesson(s.data!.progress).index,
   );
@@ -106,7 +113,11 @@ export function Conversation({
               onChange={(e) => onContext(Number(e.target.value))}
             >
               {lessons.map((l) => (
-                <option key={l.index} value={l.index}>
+                <option
+                  key={l.index}
+                  value={l.index}
+                  disabled={!canOpenLesson(l.index, s.data!.progress)}
+                >
                   Séance {l.index} · {l.title}
                 </option>
               ))}

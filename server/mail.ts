@@ -1,4 +1,4 @@
-import { weeklyEmails, weeks, parisDate } from "../src/lib/curriculum";
+import { parisDate, nextLesson } from "../src/lib/curriculum";
 import { normalizeEmail } from "./security";
 import type { Services, User } from "./types";
 export async function enqueue(
@@ -19,28 +19,8 @@ export async function giftActive(s: Services) {
   );
   return rows[0]?.enabled === true;
 }
-export function mailContent(kind: string, week: number | null) {
-  const w = Math.min(8, Math.max(1, week || 1));
-  if (kind === "welcome")
-    return {
-      subject: "Bienvenue dans ton atelier",
-      text: "Bonjour Papa Ours,\n\nUne feuille, des feutres et un peu de temps pour toi : ton atelier est ouvert. La première séance t’attend.\n\nJoyeux anniversaire !",
-    };
-  if (kind === "congratulations")
-    return {
-      subject: `Une semaine de dessin dans le carnet`,
-      text: `Bonjour Papa Ours,\n\nTu as terminé les deux séances de « ${weeks[w - 1].name} ». ${weeks[w - 1].completion.message}\n\nTu peux refaire ces exercices ou passer à la suite, à ton rythme.`,
-    };
-  if (kind === "reminder")
-    return {
-      subject: "Une feuille t’attend",
-      text: "Bonjour Papa Ours,\n\nTes feutres sont toujours là. Si tu as un moment, reprends ta séance ou regarde les dernières pages de ton carnet.\n\nMaman Chouette garde la place.",
-    };
-  return {
-    subject: weeklyEmails[w - 1].subject,
-    text: weeklyEmails[w - 1].body,
-  };
-}
+export { mailContent } from "../src/lib/mailContent";
+import { mailContent } from "../src/lib/mailContent";
 
 async function housekeeping(s: Services) {
   await s.db.query("DELETE FROM atelier_limits WHERE resets_at<now()");
@@ -133,13 +113,29 @@ export async function runMailWorker(s: Services) {
       );
       continue;
     }
-    const content = mailContent(q.kind, q.week);
-    const url = s.env.URL || "https://atelier-de-lours.netlify.app";
+    const progress = await s.db.query(
+      "SELECT lesson_id,completed_at FROM atelier_lessons WHERE user_id=$1",
+      [u.id],
+    );
+    const pending = nextLesson(
+      Object.fromEntries(progress.rows.map((p) => [p.lesson_id, p])),
+    );
+    if (q.kind === "weekly" && q.week !== pending.week) {
+      await s.db.query(
+        "UPDATE atelier_email_queue SET status='cancelled' WHERE id=$1",
+        [q.id],
+      );
+      continue;
+    }
+    const allDone = progress.rows.filter((p) => p.completed_at).length === 16;
+    const content = mailContent(q.kind, q.week, {
+      siteUrl: s.env.URL,
+      nextLessonId: allDone ? null : pending.index,
+    });
     try {
       await s.send({
         to: u.email,
         ...content,
-        text: `${content.text}\n\nOuvrir l’atelier : ${url}\n\nPour arrêter ces messages : ouvre Préférences dans l’atelier et désactive le courrier.`,
         messageId: `<atelier-${q.id}@atelier-de-lours.netlify.app>`,
       });
       await s.db.query(

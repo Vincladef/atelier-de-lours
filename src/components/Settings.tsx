@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
+import { mailContent } from "../lib/mailContent";
 import { weeklyEmails } from "../lib/curriculum";
 import { api } from "../lib/api";
 import { useStore } from "../lib/store";
@@ -74,47 +75,56 @@ export function Settings({ close }: { close: () => void }) {
         <details className="dropdown">
           <summary>Le courrier des huit semaines</summary>
           {weeklyEmails.map((m) => (
-            <div className="mail-row" key={m.week}>
-              <span>{m.week}</span>
-              <div className="mail-subject">
-                <strong>{m.subject}</strong>
-              </div>
-              <button
-                className="textbutton"
-                onClick={() => setPreview(preview === m.week ? 0 : m.week)}
-              >
-                Aperçu
-              </button>
-            </div>
-          ))}
-          {preview > 0 && (
-            <div className="mail-preview">
-              <h3>{weeklyEmails[preview - 1].subject}</h3>
-              <p className="preserve-lines">{weeklyEmails[preview - 1].body}</p>
-              {user.role === "owner" && (
+            <Fragment key={m.week}>
+              <div className="mail-row">
+                <span>{m.week}</span>
+                <div className="mail-subject">
+                  <strong>{m.subject}</strong>
+                </div>
                 <button
-                  className="button ghost"
-                  disabled={busy}
-                  onClick={async () => {
-                    setBusy(true);
-                    setError("");
-                    try {
-                      await api("/admin/test-email", "POST", { week: preview });
-                      s.notify(
-                        "Email de test envoyé au propriétaire uniquement.",
-                      );
-                    } catch (e) {
-                      setError((e as Error).message);
-                    } finally {
-                      setBusy(false);
-                    }
-                  }}
+                  className="textbutton"
+                  onClick={() => setPreview(preview === m.week ? 0 : m.week)}
                 >
-                  M’envoyer ce test (propriétaire)
+                  Aperçu
                 </button>
+              </div>
+              {preview === m.week && (
+                <div className="mail-preview">
+                  <h3>{weeklyEmails[preview - 1].subject}</h3>
+                  <iframe
+                    title="Aperçu de l’email"
+                    className="mail-preview-frame"
+                    sandbox=""
+                    srcDoc={mailContent("weekly", preview).html}
+                  />
+                  {user.role === "owner" && (
+                    <button
+                      className="button ghost"
+                      disabled={busy}
+                      onClick={async () => {
+                        setBusy(true);
+                        setError("");
+                        try {
+                          await api("/admin/test-email", "POST", {
+                            week: preview,
+                          });
+                          s.notify(
+                            "Email de test envoyé au propriétaire uniquement.",
+                          );
+                        } catch (e) {
+                          setError((e as Error).message);
+                        } finally {
+                          setBusy(false);
+                        }
+                      }}
+                    >
+                      M’envoyer ce test (propriétaire)
+                    </button>
+                  )}
+                </div>
               )}
-            </div>
-          )}
+            </Fragment>
+          ))}
         </details>
         {user.role === "owner" && (
           <details className="dropdown">
@@ -221,24 +231,27 @@ export function Settings({ close }: { close: () => void }) {
         <ErrorMessage message={error} />
         <div className="divider" />
         {user.role === "owner" ? (
-        <button
-          className="textbutton"
-          onClick={async () => {
-            try {
-              await s.logout();
-              close();
-            } catch (e) {
-              setError((e as Error).message);
-            }
-          }}
-        >
-          Quitter l’administration
-        </button>
+          <button
+            className="textbutton"
+            onClick={async () => {
+              try {
+                await s.logout();
+                close();
+              } catch (e) {
+                setError((e as Error).message);
+              }
+            }}
+          >
+            Quitter l’administration
+          </button>
         ) : (
-          <button className="textbutton" onClick={() => {
-            close();
-            go("connexion");
-          }}>
+          <button
+            className="textbutton"
+            onClick={() => {
+              close();
+              go("connexion");
+            }}
+          >
             Accès propriétaire
           </button>
         )}

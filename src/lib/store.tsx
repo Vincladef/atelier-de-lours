@@ -67,12 +67,14 @@ interface Store {
   lesson: (
     id: number,
     patch: Partial<Progress> & { completed?: boolean },
-  ) => Promise<void>;
+  ) => Promise<boolean>;
   review: (id: number, patch: Review) => Promise<void>;
   preferences: (notifications: boolean, reminders: boolean) => Promise<void>;
   retry: () => Promise<void>;
   notify: (s: string) => void;
   toast: string;
+  achievement: { kind: "lesson" | "drawing"; id: string } | null;
+  celebrate: (kind: "lesson" | "drawing", id: string) => void;
 }
 const Context = createContext<Store>(null!);
 export const useStore = () => useContext(Context);
@@ -83,6 +85,9 @@ export function Provider({ children }: { children: ReactNode }) {
   const [saved, setSaved] = useState(""),
     [failures, setFailures] = useState(0),
     [toast, setToast] = useState("");
+  const [achievement, setAchievement] = useState<Store["achievement"]>(null);
+  const celebrate: Store["celebrate"] = (kind, id) =>
+    setAchievement({ kind, id });
   const queue = useRef(Promise.resolve());
   const failed = useRef<Save[]>([]);
   const pending = useRef(0);
@@ -102,12 +107,7 @@ export function Provider({ children }: { children: ReactNode }) {
           const patch = item.patch as Partial<Progress> & {
             completed?: boolean;
           };
-          next.progress[id] = Object.assign(
-            {},
-            next.progress[id],
-            patch,
-            patch.completed ? { completed_at: new Date().toISOString() } : {},
-          );
+          next.progress[id] = Object.assign({}, next.progress[id], patch, {});
         } else if (item.path.startsWith("/reviews/"))
           next.reviews[item.path.split("/")[2]] = item.patch as Review;
       }
@@ -148,7 +148,23 @@ export function Provider({ children }: { children: ReactNode }) {
     setSaved("Enregistrement…");
     const task = queue.current.then(async () => {
       try {
-        await api(path, "PATCH", patch);
+        const result = await api<{ progress?: Progress }>(path, "PATCH", patch);
+        if (result.progress?.completed_at) {
+          const progress = result.progress;
+          setData(
+            (prev) =>
+              prev && {
+                ...prev,
+                progress: {
+                  ...prev.progress,
+                  [progress.lesson_id]: {
+                    ...prev.progress[progress.lesson_id],
+                    completed_at: progress.completed_at,
+                  },
+                },
+              },
+          );
+        }
         // A newer successful edit supersedes failed edits of those same fields.
         const keys = new Set(Object.keys(patch as object));
         failed.current = failed.current.flatMap((item) => {
@@ -161,10 +177,12 @@ export function Provider({ children }: { children: ReactNode }) {
             : [];
         });
         setFailures(failed.current.length);
+        return true;
       } catch (e) {
         failed.current.push({ path, patch });
         setFailures(failed.current.length);
         notify((e as Error).message);
+        return false;
       } finally {
         pending.current--;
         setSaved(
@@ -176,7 +194,7 @@ export function Provider({ children }: { children: ReactNode }) {
         );
       }
     });
-    queue.current = task;
+    queue.current = task.then(() => {});
     return task;
   }
   async function lesson(
@@ -202,13 +220,13 @@ export function Provider({ children }: { children: ReactNode }) {
               },
               prev.progress[id],
               patch,
-              patch.completed ? { completed_at: new Date().toISOString() } : {},
+              {},
               { updated_at: new Date().toISOString() },
             ),
           },
         },
     );
-    await save("/lessons/" + id, patch);
+    return await save("/lessons/" + id, patch);
   }
   async function review(id: number, patch: Review) {
     setData((p) => p && { ...p, reviews: { ...p.reviews, [id]: patch } });
@@ -231,6 +249,8 @@ export function Provider({ children }: { children: ReactNode }) {
     <Context.Provider
       value={{
         data,
+        achievement,
+        celebrate,
         loading,
         authError,
         saved,

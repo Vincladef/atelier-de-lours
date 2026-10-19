@@ -206,6 +206,7 @@ test("invalid progress and overlong notes are rejected", async () => {
 });
 test("weekly reviews and notification opt-outs persist", async () => {
   await f.login();
+  await f.request("/lessons/1", "PATCH", { completed: true });
   assert.equal(
     (
       await f.request("/reviews/1", "PATCH", {
@@ -718,4 +719,97 @@ test("the standalone teacher page is distinguished from a lesson currently on sc
     400,
   );
   assert.equal(f.requests.length, count);
+});
+
+test("lesson access requires every preceding validation on the server", async () => {
+  for (const id of [2, 8, 16]) {
+    assert.equal(
+      (await f.request(`/lessons/${id}`, "PATCH", { phase: "draw" })).status,
+      403,
+    );
+    assert.equal(
+      (await f.request(`/lessons/${id}`, "PATCH", { completed: true })).status,
+      403,
+    );
+    assert.equal((await f.request(`/chat?lesson_id=${id}`)).status, 403);
+    assert.equal(
+      (
+        await f.request("/chat", "POST", {
+          lesson_id: id,
+          question: "Aide",
+          page: "lesson",
+        })
+      ).status,
+      403,
+    );
+  }
+  assert.equal(f.requests.length, 0);
+  await f.request("/lessons/1", "PATCH", { checked_steps: [0, 1, 2, 3] });
+  assert.equal(
+    (await f.request("/lessons/2", "PATCH", { phase: "draw" })).status,
+    403,
+  );
+  await f.request("/lessons/1", "PATCH", { completed: true });
+  assert.equal(
+    (await f.request("/lessons/2", "PATCH", { phase: "draw" })).status,
+    200,
+  );
+  assert.equal(
+    (await f.request("/lessons/3", "PATCH", { completed: true })).status,
+    403,
+  );
+  assert.equal(
+    (await f.request("/lessons/1", "PATCH", { notes: "Je refais le cours" }))
+      .status,
+    200,
+  );
+});
+
+test("weekly mail button follows real next lesson rather than the first lesson of the week", async () => {
+  await f.request("/state");
+  await f.request("/lessons/1", "PATCH", { completed: true });
+  await f.request("/preferences", "PATCH", {
+    notifications: true,
+    reminders: false,
+  });
+  // Isolated SMTP adapter only; never enables the production gift.
+  await f.s.db.query(
+    "UPDATE atelier_settings SET enabled=true WHERE key='gift_activated'",
+  );
+  await runMailWorker(f.s);
+  assert.equal(f.mails.length, 2);
+  for (const mail of f.mails) {
+    assert.ok(mail.html?.includes("/#cours/2"));
+    assert.ok(mail.text.includes("/#cours/2"));
+    assert.ok(mail.html?.includes("Un soleil se couche"));
+  }
+});
+
+test("stale weekly mail is cancelled after progress advances rather than describing an old week", async () => {
+  await f.request("/state");
+  const user = (
+    await f.s.db.query("SELECT id FROM atelier_users WHERE role='learner'")
+  ).rows[0];
+  await enqueue(f.s, user.id, "weekly", 1);
+  for (const id of [1, 2])
+    await f.request(`/lessons/${id}`, "PATCH", { completed: true });
+  await f.request("/preferences", "PATCH", {
+    notifications: true,
+    reminders: false,
+  });
+  await f.s.db.query(
+    "UPDATE atelier_users SET created_at=now()-interval '8 days' WHERE id=$1",
+    [user.id],
+  );
+  await f.s.db.query(
+    "UPDATE atelier_settings SET enabled=true WHERE key='gift_activated'",
+  );
+  await runMailWorker(f.s);
+  const row = (
+    await f.s.db.query(
+      "SELECT status FROM atelier_email_queue WHERE kind='weekly' AND week=1",
+    )
+  ).rows[0];
+  assert.equal(row.status, "cancelled");
+  assert.ok(f.mails.every((m) => m.text.includes("/#cours/3")));
 });

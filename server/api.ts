@@ -14,6 +14,7 @@ import {
   token,
   uuid,
 } from "./security";
+import { requireLessonAccess } from "./access";
 import { image } from "./images";
 import { askOwl } from "./ai";
 import { giftActive, mailContent } from "./mail";
@@ -220,6 +221,7 @@ export async function handle(req: Request, s: Services): Promise<Response> {
     if (lessonMatch && method === "PATCH") {
       const id = integer(Number(lessonMatch[1]), 1, 16);
       const b = await body(req);
+      await requireLessonAccess(s.db, u.id, id);
       const changes: Record<string, unknown> = {};
       if ("phase" in b) {
         if (!["observe", "draw", "finish"].includes(b.phase))
@@ -282,6 +284,7 @@ export async function handle(req: Request, s: Services): Promise<Response> {
     const weekMatch = /^\/reviews\/(\d+)$/.exec(path);
     if (weekMatch && method === "PATCH") {
       const week = integer(Number(weekMatch[1]), 1, 8);
+      await requireLessonAccess(s.db, u.id, week * 2);
       const b = await body(req);
       const result = await s.db.query(
         "INSERT INTO atelier_weekly_reviews(user_id,week,easy,difficult,repeat) VALUES($1,$2,$3,$4,$5) ON CONFLICT(user_id,week) DO UPDATE SET easy=excluded.easy,difficult=excluded.difficult,repeat=excluded.repeat,updated_at=now() RETURNING week,easy,difficult,repeat",
@@ -406,6 +409,7 @@ export async function handle(req: Request, s: Services): Promise<Response> {
     }
     if (path === "/chat" && method === "GET") {
       const id = integer(Number(url.searchParams.get("lesson_id")), 1, 16);
+      await requireLessonAccess(s.db, u.id, id);
       const before = url.searchParams.has("before")
         ? integer(
             Number(url.searchParams.get("before")),
@@ -425,6 +429,7 @@ export async function handle(req: Request, s: Services): Promise<Response> {
     if (path === "/chat" && method === "POST") {
       const b = await body(req, 2950000);
       const id = integer(b.lesson_id, 1, 16);
+      await requireLessonAccess(s.db, u.id, id);
       const question = text(b.question, 1500);
       if (!question)
         throw new HttpError(400, "Écris une question pour Maman Chouette.");
@@ -487,11 +492,15 @@ export async function handle(req: Request, s: Services): Promise<Response> {
       await limit(s.db, "test-email", 3, 3600);
       const b = await body(req);
       const week = integer(b.week, 1, 8);
-      const mail = mailContent("weekly", week);
+      const mail = mailContent("weekly", week, {
+        siteUrl: s.env.URL,
+        test: true,
+      });
       await s.send({
         to: normalizeEmail(s.env.EMAIL_FROM),
         subject: `[TEST] ${mail.subject}`,
-        text: `${mail.text}\n\nEmail de test réservé au propriétaire. Aucun envoi à Papa.`,
+        text: mail.text,
+        html: mail.html,
       });
       return json({ ok: true });
     }

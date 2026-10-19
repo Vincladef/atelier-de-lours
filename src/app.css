@@ -923,3 +923,120 @@ button:disabled {
 .lesson-stage .dropdown > summary {
   font-size: 15px;
 }
+
+.lesson-row:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+  background: transparent;
+}
+.lesson-row:disabled .row-end {
+  color: var(--muted);
+  font-size: 13px;
+}
+.locked-lesson .button {
+  margin: 12px 10px 0 0;
+}
+.mail-preview-frame {
+  width: 100%;
+  height: 700px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  border-radius: 8px;
+}
+.success-moment {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 18px 0;
+  color: var(--forest);
+  font-size: 17px;
+  font-weight: 600;
+}
+.success-burst {
+  display: inline-grid;
+  flex: 0 0 48px;
+  width: 48px;
+  height: 48px;
+  position: relative;
+  place-items: center;
+}
+.success-tick {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #e5ecdf;
+  font-size: 26px;
+  animation: success-pop 0.5s cubic-bezier(0.2, 0.8, 0.3, 1.3) both;
+}
+.success-burst i {
+  position: absolute;
+  width: 5px;
+  height: 9px;
+  background: var(--rust);
+  border-radius: 1px;
+  animation: success-spark 0.85s ease-out both;
+  transform: rotate(calc(var(--n) * 45deg)) translateY(-22px);
+  opacity: 0;
+}
+.success-burst i:nth-child(2n) {
+  background: var(--butter);
+}
+.just-created {
+  animation: drawing-arrival 0.6s ease-out both;
+}
+.check-step input:checked {
+  accent-color: var(--forest);
+  animation: checked-pop 0.25s ease-out;
+}
+@keyframes success-pop {
+  from {
+    transform: scale(0.3) rotate(-15deg);
+    opacity: 0;
+  }
+  70% {
+    transform: scale(1.12) rotate(4deg);
+    opacity: 1;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+@keyframes success-spark {
+  0% {
+    opacity: 0;
+    transform: rotate(calc(var(--n) * 45deg)) translateY(-15px) scale(0.5);
+  }
+  25% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(calc(var(--n) * 45deg)) translateY(-40px) scale(0.3);
+  }
+}
+@keyframes drawing-arrival {
+  from {
+    opacity: 0.3;
+    transform: translateY(10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes checked-pop {
+  50% {
+    transform: scale(1.2);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .success-tick,
+  .success-burst i,
+  .just-created,
+  .check-step input:checked {
+    animation: none;
+  }
+}

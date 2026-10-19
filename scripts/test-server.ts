@@ -6,6 +6,9 @@ import { resolve, extname } from "node:path";
 import { fixtures } from "../tests/helpers";
 import { handle } from "../server/api";
 const f = await fixtures();
+const csp = /Content-Security-Policy = "([^"\n]+)"/.exec(
+  await readFile("netlify.toml", "utf8"),
+)?.[1];
 const types: Record<string, string> = {
   ".html": "text/html",
   ".js": "application/javascript",
@@ -89,6 +92,7 @@ const server = createServer(async (req, res) => {
     );
     res.setHeader("X-Content-Type-Options", "nosniff");
     res.setHeader("Referrer-Policy", "no-referrer");
+    if (csp) res.setHeader("Content-Security-Policy", csp);
     res.end(bytes);
   } catch (e) {
     console.error("Test harness error:", (e as Error).message);

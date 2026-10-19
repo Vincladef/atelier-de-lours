@@ -73,6 +73,9 @@ test("four sections, zero progress, all weeks and 16 lessons", async ({
       await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
       await expect(page.locator(".phase-btn")).toHaveCount(3);
       await noOverflow(page);
+      await page.getByRole("button", { name: "Terminer", exact: true }).click();
+      await page.getByRole("button", { name: "J’ai terminé ma leçon" }).click();
+      await expect(page.locator(".success-moment")).toBeVisible();
       await page.getByRole("button", { name: "Toutes les semaines" }).click();
       if (j === 0) {
         const h = page
@@ -273,7 +276,7 @@ test("animal studio draws, erases and saves a real sketch", async ({
 test("owl questions and explicit image consent; no fake analysis", async ({
   page,
 }) => {
-  await page.goto("/#chouette/2");
+  await page.goto("/#chouette/1");
   await page
     .getByLabel("Ma question à Maman Chouette")
     .fill("Comment faire mon ciel ?");
@@ -538,4 +541,94 @@ test("the next message follows the page and gesture currently displayed", async 
   expect((await sent).postDataJSON().page).toBe("owl");
   await expect(page.getByRole("log")).toContainText("Je suis dans ton bureau.");
   expect(errors).toEqual([]);
+});
+
+test("future lessons stay locked until a confirmed save, and a saved success unlocks the next one", async ({
+  page,
+}) => {
+  await page.goto("/#cours");
+  const rows = page.locator(".lesson-row");
+  await expect(rows.nth(0)).toBeEnabled();
+  await expect(rows.nth(1)).toBeDisabled();
+  await page.goto("/#cours/2");
+  await expect(
+    page.getByRole("heading", { name: "Une séance à la fois." }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Reprendre ma séance" }).click();
+  await page.getByRole("button", { name: "Terminer", exact: true }).click();
+  await page.route("**/api/lessons/1", async (route) => {
+    if (route.request().postDataJSON()?.completed)
+      return route.fulfill({
+        status: 503,
+        contentType: "application/json",
+        body: JSON.stringify({ error: "Enregistrement indisponible" }),
+      });
+    return route.continue();
+  });
+  await page.getByRole("button", { name: "J’ai terminé ma leçon" }).click();
+  await expect(page.locator(".save-warning")).toBeVisible();
+  await expect(page.locator(".success-moment")).toHaveCount(0);
+  await page.goto("/#cours/2");
+  await expect(
+    page.getByRole("heading", { name: "Une séance à la fois." }),
+  ).toBeVisible();
+  await page.unroute("**/api/lessons/1");
+  await page.getByRole("button", { name: "Réessayer", exact: true }).click();
+  await expect(
+    page.getByRole("heading", { name: "Un soleil se couche" }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Terminer", exact: true }).click();
+  await page.getByRole("button", { name: "J’ai terminé ma leçon" }).click();
+  await expect(page.locator(".success-moment")).toBeVisible();
+  await expect(page.locator(".success-tick")).toHaveCSS(
+    "animation-name",
+    "success-pop",
+  );
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await expect(page.locator(".success-tick")).toHaveCSS(
+    "animation-name",
+    "none",
+  );
+  await page.getByRole("button", { name: "Le cours suivant" }).click();
+  await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+});
+
+test("weekly email preview shows a branded message and a working application destination", async ({
+  page,
+}, info) => {
+  await page.getByRole("button", { name: "Préférences", exact: true }).click();
+  await page
+    .getByText("Le courrier des huit semaines", { exact: true })
+    .click();
+  await page
+    .getByRole("button", { name: "Aperçu", exact: true })
+    .first()
+    .click();
+  const preview = page.frameLocator('iframe[title="Aperçu de l’email"]');
+  await expect(
+    preview.getByRole("heading", {
+      name: "Faire connaissance avec les feutres",
+    }),
+  ).toBeVisible();
+  await expect(
+    preview.getByRole("link", { name: "Ouvrir ma séance" }),
+  ).toHaveAttribute("href", "https://atelier-de-lours.netlify.app/#cours/1");
+  await page
+    .locator('iframe[title="Aperçu de l’email"]')
+    .scrollIntoViewIfNeeded();
+  await preview
+    .locator("body")
+    .screenshot({
+      path: `test-results/${info.project.name}-email-preview.png`,
+    });
+  await expect
+    .poll(() =>
+      preview
+        .locator("body")
+        .evaluate(
+          (e) => e.scrollWidth <= e.ownerDocument.documentElement.clientWidth,
+        ),
+    )
+    .toBe(true);
+  await noOverflow(page);
 });

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { SuccessMoment } from "./SuccessMoment";
 import { api, compress } from "../lib/api";
 import { lessons, parisDate } from "../lib/curriculum";
 import { useStore, type Artwork } from "../lib/store";
@@ -69,6 +70,13 @@ export function Notebook() {
         </div>
         <Photo name="chouettePortrait" />
       </div>
+      {s.achievement?.kind === "drawing" &&
+        works.some((w) => w.id === s.achievement?.id) && (
+          <SuccessMoment
+            key={s.achievement.id}
+            message="Un dessin de plus dans ton carnet."
+          />
+        )}
       <div className="section-head">
         <h2>Mes réalisations</h2>
         <div className="row wrap">
@@ -95,7 +103,12 @@ export function Notebook() {
           {works.map((w, i) => (
             <article
               key={w.id}
-              className="work"
+              className={
+                "work " +
+                (s.achievement?.kind === "drawing" && s.achievement.id === w.id
+                  ? "just-created"
+                  : "")
+              }
               style={
                 {
                   "--angle": [0.3, -0.65, 1.1, -0.8, 0.4][i % 5] + "deg",
@@ -249,15 +262,19 @@ export function Upload({
           setBusy(true);
           setError("");
           try {
-            await api("/artworks", "POST", {
-              title,
-              drawn_on: date,
-              lesson_id: lesson ? Number(lesson) : null,
-              note,
-              image: data,
-            });
+            const result = await api<{ artwork: Artwork }>(
+              "/artworks",
+              "POST",
+              {
+                title,
+                drawn_on: date,
+                lesson_id: lesson ? Number(lesson) : null,
+                note,
+                image: data,
+              },
+            );
             await s.refresh();
-            s.notify("Dessin ajouté au carnet.");
+            s.celebrate("drawing", result.artwork.id);
             close();
           } catch (e) {
             setError((e as Error).message);
